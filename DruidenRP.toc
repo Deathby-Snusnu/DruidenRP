@@ -1,0 +1,11 @@
+## Interface: 16001
+## Title: Druiden RP
+## Notes: Rollenspieltexte fuer Druiden, abgeleitet von PaladinRP
+## Author: Hannes; DruidenRP adaptation
+## Version: 0.1.0
+## SavedVariablesPerCharacter: DruidenRP_CharacterDB
+
+config\Settings.lua
+data\Texts.lua
+data\Racial.lua
+DruidenRP.lua
