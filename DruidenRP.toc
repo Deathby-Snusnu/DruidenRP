@@ -8,4 +8,9 @@
 config\Settings.lua
 data\Texts.lua
 data\Racial.lua
+core\Database.lua
+core\Text.lua
+core\Chat.lua
+core\Cooldown.lua
+core\Commands.lua
 DruidenRP.lua

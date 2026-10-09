@@ -1,21 +1,9 @@
-local files = {
-    "config\\Settings.lua", "data\\Texts.lua", "data\\Racial.lua", "DruidenRP.lua",
-}
-local io = rawget(_G, "io") or {
-    open = function()
-        error("io is unavailable", 2)
-    end,
-}
-local load = rawget(_G, "load") or function(source, chunkname)
-    local loadstring = rawget(_G, "loadstring")
-    assert(loadstring, "Lua load() is unavailable")
-    return loadstring(source, chunkname)
-end
-local loadfile = rawget(_G, "loadfile") or function(path)
-    local handle = assert(io.open(path, "rb"))
-    local source = handle:read("*a")
-    handle:close()
-    return assert(load(source, "@" .. path))
+local files = {}
+for line in io.lines("DruidenRP.toc") do
+    local file = line:match("^%s*(.-)%s*$")
+    if file ~= "" and not file:find("^#") then
+        files[#files + 1] = file:gsub("/", "\\")
+    end
 end
 local checks = 0
 local function check(condition, message)
@@ -38,6 +26,7 @@ local function newClient(options)
         RPChatMod_Settings = { textChance = 99 },
         DruidenRP = nil,
     }, { __index = _G })
+    env._G = env
     env.print = function(text) state.notices[#state.notices + 1] = text end
     env.GetTime = function() return state.time end
     env.UnitClass = function() return "class", state.class end
@@ -103,7 +92,7 @@ client.command("chance 100")
 client.login()
 check(client.env.DruidenRP_CharacterDB.textChance == 30, "defaults")
 check(client.env.DruidenRP_CharacterDB.chatChannel == "SAY", "say is the default channel")
-check(client.env.RPChatMod_Settings.textChance == 99, "Paladin settings untouched")
+check(client.env.RPChatMod_Settings.textChance == 99, "other addon settings untouched")
 check(client.env.PaladinRP.untouched, "Paladin namespace untouched")
 check(client.env.DruidenRP == client.addon, "public macro API")
 client.command("chance 100")
@@ -126,7 +115,8 @@ local count = #client.messages
 check(not client.addon.TryText("MARK") and #client.messages == count, "zero chance")
 client.command("chance 100")
 for _, invalid in ipairs({ "chance -1", "chance 101", "chance 3x", "chance 1.5",
-    "cooldown 3601", "cooldown inf", "chance 30 garbage" }) do
+    "cooldown 3601", "cooldown inf", "chance 30 garbage", "chance 1e2",
+    "chance +30", "chance 0x32", "cooldown 1.0" }) do
     client.command(invalid)
 end
 check(client.env.DruidenRP_CharacterDB.textChance == 100, "invalid chance rejected")
@@ -168,6 +158,16 @@ check(client.messages[#client.messages].language == nil, "no emote language")
 client.command("channel AUTO")
 client.command("channel WHISPER")
 check(client.env.DruidenRP_CharacterDB.chatChannel == "AUTO", "invalid channel rejected")
+client.command("channel")
+check(client.env.DruidenRP_CharacterDB.chatChannel == "AUTO", "channel query preserves setting")
+check(client.notices[#client.notices]:find("AUTO", 1, true), "channel query displays value")
+for _, channel in ipairs({ "PARTY", "RAID", "INSTANCE_CHAT" }) do
+    client.command("channel " .. channel)
+    count = #client.messages
+    check(not client.addon.TryText("MARK") and #client.messages == count,
+        channel .. " unavailable never falls back to say")
+end
+client.command("channel AUTO")
 
 local db = client.env.DruidenRP_CharacterDB
 db.personalTexts.MARK = { "Eigener Text fuer %s." }
@@ -218,8 +218,11 @@ check(client.env.SLASH_DRUIDENRP2 == "/druidenrp", "long slash command")
 
 local legacy = newClient({ legacy = true, race = "Tauren",
     db = { textChance = 100, cooldown = 0 } })
-check(legacy.addon.TryText("MARK"), "legacy chat API")
-check(legacy.messages[1].language == 3, "tauren racial language")
+check(not legacy.addon.TryText("MARK"), "legacy-only client reported unsupported")
+check(#legacy.messages == 0, "legacy-only client never silently sends")
+local tauren = newClient({ race = "Tauren", db = { textChance = 100, cooldown = 0 } })
+check(tauren.addon.TryText("MARK"), "tauren text")
+check(tauren.messages[1].language == 3, "tauren racial language")
 local unsupported = newClient({ noChat = true, db = { textChance = 100, cooldown = 0 } })
 check(not unsupported.addon.TryText("MARK"), "missing chat API reported")
 local otherClass = newClient({ class = "PALADIN" })
@@ -233,12 +236,29 @@ check(damaged.env.DruidenRP_CharacterDB.textChance == 30, "repair invalid chance
 check(damaged.env.DruidenRP_CharacterDB.cooldown == 20, "repair invalid cooldown")
 check(damaged.env.DruidenRP_CharacterDB.chatChannel == "SAY", "repair invalid channel")
 local migrated = newClient({ db = { chatChannel = "AUTO" } })
-check(migrated.env.DruidenRP_CharacterDB.chatChannel == "SAY", "migrate old default auto to say")
-check(migrated.env.DruidenRP_CharacterDB.chatChannelVersion == 1, "record channel migration")
+check(migrated.env.DruidenRP_CharacterDB.chatChannel == "AUTO", "saved auto is preserved")
+check(migrated.env.DruidenRP_CharacterDB.chatChannelVersion == 1, "channel version retained")
 local saved = newClient({ db = { textChance = 71, cooldown = 12, chatChannel = "EMOTE",
     personalTexts = { MARK = { "Gespeichert." } } } })
 check(saved.env.DruidenRP_CharacterDB.textChance == 71, "saved chance preserved")
 check(saved.env.DruidenRP_CharacterDB.cooldown == 12, "saved cooldown preserved")
 check(saved.env.DruidenRP_CharacterDB.personalTexts.MARK[1] == "Gespeichert.", "saved text preserved")
+
+local fractional = newClient({ db = { textChance = 2.5, cooldown = 1.5 } })
+check(fractional.env.DruidenRP_CharacterDB.textChance == 30, "fractional saved chance repaired")
+check(fractional.env.DruidenRP_CharacterDB.cooldown == 20, "fractional saved cooldown repaired")
+local invalidDB = newClient({ db = "invalid" })
+check(type(invalidDB.env.DruidenRP_CharacterDB) == "table", "invalid database repaired")
+local failedSend = newClient({ noChat = true, db = { textChance = 100, cooldown = 20 } })
+check(not failedSend.addon.TryText("MARK"), "failed send")
+check(failedSend.addon.CooldownReady(), "failed send never starts cooldown")
+check(failedSend.addon.GetRemainingCooldown() == 0, "first remaining cooldown zero")
+check(not client.addon.TryText({}), "invalid public key rejected")
+client.command("cooldown 3600")
+check(client.env.DruidenRP_CharacterDB.cooldown == 3600, "cooldown maximum accepted")
+client.command("cooldown 0")
+client.command("chance 0")
+check(client.env.DruidenRP_CharacterDB.textChance == 0, "chance minimum accepted")
+client.command("chance 100")
 
 print("PASS: " .. checks .. " checks")

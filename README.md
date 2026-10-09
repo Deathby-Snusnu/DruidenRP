@@ -4,25 +4,28 @@ Eigenstaendiges WoW-RP-Chat-Addon, abgeleitet vom Aufbau und Verhalten von
 PaladinRP (Hannes, MIT). PaladinRP wird weder veraendert noch als Abhaengigkeit
 benoetigt. Die Texte sind neu fuer Druiden geschrieben.
 
+## Beschreibung
+
+Zufaellige Rollenspieltexte fuer Druidenzauber und Gestalten, mit eigenen
+Texten pro Charakter und Volkstexten fuer Nachtelfen und Tauren.
+Die Ausgabe erfolgt ausschliesslich auf manuellen Aufruf.
+
 ## Installation
 
 Den Ordner `DruidenRP` aus dem ZIP in diesen Ordner entpacken:
 
 ```text
-E:\Program Files (x86)\World of Warcraft\_classic_beta_\Interface\AddOns
+<WoW-Installationsordner>\<Client>\Interface\AddOns
 ```
 
 Danach muss `AddOns\DruidenRP\DruidenRP.toc` vorhanden sein, ohne einen
 zusaetzlichen verschachtelten Projektordner. WoW neu starten, das Addon in der
 Charakterauswahl aktivieren und mit einem Druiden einloggen.
 
-Die Interface-Version `16001` wurde aus PaladinRP uebernommen; sie ist keine
-Zusage zur Kompatibilitaet mit jedem Beta-Build. Im Spiel zeigt
-`/dump select(4, GetBuildInfo())` die benoetigte Interface-Version.
-Bei einer Versionswarnung diese mit der TOC vergleichen. Ein echter Test im
-WoW-Client steht noch aus; Lua-Tests simulieren nur die benoetigten WoW-APIs.
+Das ZIP enthaelt Spieldateien, Dokumentation und Lizenz, aber keine Tests,
+Git- oder Editor-Dateien. Die Tests sind nur im Quellprojekt vorhanden.
 
-## Bedienung
+## Schnellstart
 
 ```text
 /drp help
@@ -41,7 +44,38 @@ WoW-Client steht noch aus; Lua-Tests simulieren nur die benoetigten WoW-APIs.
 `/druidenrp` ist ein Alias. Standard: 30 Prozent Textchance, 20 Sekunden
 Cooldown. Der erste Text ist sofort moeglich. Chance und Cooldown gelten
 auch fuer manuelle Befehle; Chance 0 deaktiviert die Ausgabe.
-Alle Einstellungen und eigene Texte werden pro Charakter gespeichert.
+Nur Druiden koennen RP-Texte senden; andere Klassen koennen Einstellungen
+anzeigen und aendern.
+
+## Befehle
+
+| Befehl | Funktion |
+| --- | --- |
+| `/drp` oder `/drp help` | Hilfe anzeigen |
+| `/drp list` | Allgemeine Textschluessel auflisten |
+| `/drp <schluessel>` | RP-Text versuchen |
+| `/drp status` | Einstellungen anzeigen |
+| `/drp chance <0-100>` | Textchance, ganze Zahl |
+| `/drp cooldown <0-3600>` | Cooldown in Sekunden, ganze Zahl |
+| `/drp channel` | Aktuellen Kanal anzeigen |
+| `/drp channel <kanal>` | Kanal setzen |
+
+`/druidenrp` unterstuetzt dieselben Befehle. Gross-/Kleinschreibung der
+Befehle und Textschluessel spielt keine Rolle. Ungueltige Zahlen,
+Dezimalwerte und zusaetzliche Argumente werden abgelehnt, nicht begrenzt.
+
+## Einstellungen
+
+| Einstellung | Standard | Werte |
+| --- | --- | --- |
+| `textChance` | `30` | Ganze Zahl 0-100 |
+| `cooldown` | `20` | Ganze Zahl 0-3600 Sekunden |
+| `chatChannel` | `SAY` | SAY, YELL, EMOTE, PARTY, RAID, INSTANCE_CHAT, AUTO |
+
+Die Standardwerte stehen in [config/Settings.lua](./config/Settings.lua).
+Alle Einstellungen und eigene Texte werden in `DruidenRP_CharacterDB` pro
+Charakter gespeichert. Gueltige gespeicherte Werte, einschliesslich AUTO,
+bleiben erhalten; ungueltige Werte werden mit einer Meldung repariert.
 
 Die Ausgabe erfolgt standardmaessig in SAY, auch wenn der Charakter in einer
 Gruppe oder einem Schlachtzug ist. Der Kanal kann jederzeit per
@@ -51,10 +85,9 @@ waehlbar. AUTO waehlt Instanzgruppe, Schlachtzug, Gruppe oder SAY, in dieser
 Reihenfolge. Ein nicht verfuegbarer Gruppenkanal wird gemeldet, nicht auf
 einen oeffentlichen Kanal umgeleitet. SAY/YELL verwenden die bekannte
 Volkssprache, wenn verfuegbar.
-Ein bisher gespeicherter AUTO-Standard wird beim ersten Login auf SAY
-umgestellt; AUTO kann anschliessend weiterhin explizit gesetzt werden.
-Nur Druiden koennen RP-Texte senden; andere Klassen koennen Einstellungen
-anzeigen und aendern.
+Ein abgelehnter Text startet keinen Cooldown. Bei einem erfolgreichen
+Chat-API-Aufruf beginnt der Cooldown; Serverbeschraenkungen lassen sich
+damit nicht als erfolgreiche Zustellung bestaetigen.
 
 ## Textschluessel
 
@@ -99,7 +132,7 @@ ebenfalls einen RP-Text ausloesen. Alternativ ist
 Chatbeschraenkungen des Clients gelten weiterhin; insbesondere in
 SAY/YELL den Aufruf ueber einen manuellen Befehl oder Tastendruck ausloesen.
 
-## Eigene Texte und Projektstruktur
+## Eigene Texte
 
 Die Auswahl folgt der Reihenfolge eigene Texte, Volkstexte, allgemeine Texte.
 Eigene Texte koennen in `DruidenRP_CharacterDB.personalTexts` unter einem
@@ -120,13 +153,48 @@ leere eigene Textpools werden gemeldet. Zum Entfernen einer Anpassung:
 Texte duerfen nach Ersetzung maximal 255 Bytes enthalten und keine
 Zeilenumbrueche oder `|`-Chatmarkierungen.
 
-- [DruidenRP.lua](./DruidenRP.lua): Datenbank, Textauswahl, Chat und Befehle.
+## Projektstruktur
+
+- [DruidenRP.toc](./DruidenRP.toc): Metadaten und Lade-Reihenfolge.
+- [DruidenRP.lua](./DruidenRP.lua): Login und oeffentliche `DruidenRP.TryText`-API.
 - [config/Settings.lua](./config/Settings.lua): Standardwerte.
+- [core/Database.lua](./core/Database.lua): Charakterdaten und Validierung.
+- [core/Text.lua](./core/Text.lua): Poolauswahl und Platzhalterersetzung.
+- [core/Chat.lua](./core/Chat.lua): Kanaele, Volkssprache und Textpruefung.
+- [core/Cooldown.lua](./core/Cooldown.lua): Wartezeit nach Textausgabe.
+- [core/Commands.lua](./core/Commands.lua): Chatbefehle.
 - [data/Texts.lua](./data/Texts.lua): 20 allgemeine Textkategorien.
 - [data/Racial.lua](./data/Racial.lua): Nachtelfen- und Taurentexte.
-- [tests/test_addon.lua](./tests/test_addon.lua): eigenstaendiger Lua-Test
-  mit simulierten WoW-APIs; vom Projektordner mit `lua tests\test_addon.lua`.
+
+## Tests
+
+Im Quellprojekt, nicht im Installations-ZIP, liegt
+[tests/test_addon.lua](./tests/test_addon.lua). Vom AddOn-Ordner aus mit
+Lua 5.1 oder 5.4 ausfuehren:
+
+```powershell
+lua tests\test_addon.lua
+```
+
+Der Test laedt die Dateien in TOC-Reihenfolge und simuliert die WoW-APIs.
+Er prueft unter anderem Datenbankerhalt, Klassenbeschraenkung,
+Kanalwahl, Textgrenzen und Cooldown.
+
+## Kompatibilitaet
+
+Die TOC deklariert Interface `16001` und Version `0.1.0`. Im Spiel zeigt
+`/dump select(4, GetBuildInfo())` die benoetigte Interface-Version.
+Die TOC-Version ist keine Zusage fuer jeden Classic- oder Beta-Build.
+Erforderlich ist `C_ChatInfo.SendChatMessage`; ein Client mit ausschliesslich
+der alten globalen Chat-API wird mit einer Meldung abgewiesen.
+Ein echter Test im WoW-Client steht noch aus; Lua-Tests pruefen nur die
+simulierten APIs.
 
 Eigener Namensraum, `/drp` und `DruidenRP_CharacterDB` vermeiden Konflikte
 mit PaladinRP. Keine externe Bibliothek, kein automatischer Chat-Spam und
 keine unfertige Einstellungsoberflaeche. Konfiguration erfolgt per Chatbefehl.
+
+## Lizenz
+
+MIT-Lizenz, Copyright (c) 2026 Hannes, siehe [LICENSE](./LICENSE).
+Die Aenderungen sind in [CHANGELOG.md](./CHANGELOG.md) dokumentiert.
