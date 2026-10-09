@@ -155,6 +155,20 @@ check(not client.addon.TryText("MARK") and #client.messages == count, "unavailab
 client.command("channel EMOTE")
 check(client.addon.TryText("BEAR"), "emote channel")
 check(client.messages[#client.messages].language == nil, "no emote language")
+client.command("channel PARTY")
+local druidDB = client.env.DruidenRP_CharacterDB
+druidDB.personalTexts.TEST_EMOTE = { "*  richtet sich auf und hebt die Hand.  *" }
+count = #client.messages
+check(client.addon.TryText("TEST_EMOTE"), "marked action sends despite unavailable speech channel")
+check(client.messages[#client.messages].text == "richtet sich auf und hebt die Hand.",
+    "emote markers are stripped")
+check(client.messages[#client.messages].channel == "EMOTE", "marked action uses EMOTE")
+check(client.messages[#client.messages].language == nil, "emote has no racial language")
+count = #client.messages
+check(not client.addon.SendText("*unvollstaendige Markierung") and #client.messages == count,
+    "unmatched emote marker is rejected")
+check(not client.addon.SendText("**") and #client.messages == count,
+    "empty emote is rejected")
 client.command("channel AUTO")
 client.command("channel WHISPER")
 check(client.env.DruidenRP_CharacterDB.chatChannel == "AUTO", "invalid channel rejected")

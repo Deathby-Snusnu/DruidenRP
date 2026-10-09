@@ -17,6 +17,7 @@ nicht behauptet; die TOC traegt weiterhin Version `0.1.0`.
 - `/drp channel` zeigt ohne Argument den aktuellen Kanal.
 - README und TOC-gesteuerte Tests an die Modulstruktur angepasst.
 - Legacy-Tests an die tatsaechlich erforderliche `C_ChatInfo`-API angepasst.
+- `*...*`-markierte Handlungstexte ohne Sternchen als `/me`-Emotes senden.
 
 ### Beibehalten
 

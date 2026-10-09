@@ -64,6 +64,11 @@ anzeigen und aendern.
 Befehle und Textschluessel spielt keine Rolle. Ungueltige Zahlen,
 Dezimalwerte und zusaetzliche Argumente werden abgelehnt, nicht begrenzt.
 
+Texte zwischen `*Sternchen*` werden als `/me`-Emote ausgegeben; die
+Sternchen werden entfernt. Solche Handlungen verwenden immer `EMOTE`,
+unabhaengig vom eingestellten Sprachkanal. Die bestehende manuelle
+Kanaleinstellung `EMOTE` bleibt ebenfalls unterstuetzt.
+
 ## Einstellungen
 
 | Einstellung | Standard | Werte |
