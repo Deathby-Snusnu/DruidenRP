@@ -171,6 +171,11 @@ Zeilenumbrueche oder `|`-Chatmarkierungen.
 - [data/Texts.lua](./data/Texts.lua): 20 allgemeine Textkategorien.
 - [data/Racial.lua](./data/Racial.lua): Nachtelfen- und Taurentexte.
 
+Die Kernmodule verwenden die projektweit einheitlichen Funktionen
+`BuildText`, `SendText`, `CooldownReady` und `StartCooldown`. `TryText` bleibt
+die oeffentliche manuelle Schnittstelle; Textauswahl und Prioritaet bleiben
+druidenspezifisch.
+
 ## Tests
 
 Im Quellprojekt, nicht im Installations-ZIP, liegt

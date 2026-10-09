@@ -25,3 +25,5 @@ nicht behauptet; die TOC traegt weiterhin Version `0.1.0`.
 - Eigene Texte vor Volkstexten und allgemeinen Texten; vorhandene Textbestaende.
 - Kein oeffentlicher Fallback fuer nicht verfuegbare explizite Gruppenkanaele.
 - Textgrenze von 255 Bytes, keine Zeilenumbrueche oder Chat-Markierungen.
+- Gemeinsame Modulkonventionen und kanonische Kernfunktionsnamen mit den
+  anderen AddOns abgestimmt und dokumentiert.
