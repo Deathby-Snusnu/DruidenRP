@@ -33,7 +33,9 @@ WoW-Client steht noch aus; Lua-Tests simulieren nur die benoetigten WoW-APIs.
 /drp status
 /drp chance 100
 /drp cooldown 20
-/drp channel AUTO
+/drp channel SAY
+/drp channel PARTY
+/drp channel INSTANCE_CHAT
 ```
 
 `/druidenrp` ist ein Alias. Standard: 30 Prozent Textchance, 20 Sekunden
@@ -41,10 +43,16 @@ Cooldown. Der erste Text ist sofort moeglich. Chance und Cooldown gelten
 auch fuer manuelle Befehle; Chance 0 deaktiviert die Ausgabe.
 Alle Einstellungen und eigene Texte werden pro Charakter gespeichert.
 
-AUTO waehlt Instanzgruppe, Schlachtzug, Gruppe oder SAY, in dieser Reihenfolge.
-Explizite Kanaele: SAY, YELL, EMOTE, PARTY, RAID, INSTANCE_CHAT. Ein nicht
-verfuegbarer Gruppenkanal wird gemeldet, nicht auf einen oeffentlichen Kanal
-umgeleitet. SAY/YELL verwenden die bekannte Volkssprache, wenn verfuegbar.
+Die Ausgabe erfolgt standardmaessig in SAY, auch wenn der Charakter in einer
+Gruppe oder einem Schlachtzug ist. Der Kanal kann jederzeit per
+`/drp channel <kanal>` gesetzt werden: SAY, YELL, EMOTE, PARTY, RAID,
+INSTANCE_CHAT oder AUTO. PARTY, RAID und INSTANCE_CHAT sind damit gezielt
+waehlbar. AUTO waehlt Instanzgruppe, Schlachtzug, Gruppe oder SAY, in dieser
+Reihenfolge. Ein nicht verfuegbarer Gruppenkanal wird gemeldet, nicht auf
+einen oeffentlichen Kanal umgeleitet. SAY/YELL verwenden die bekannte
+Volkssprache, wenn verfuegbar.
+Ein bisher gespeicherter AUTO-Standard wird beim ersten Login auf SAY
+umgestellt; AUTO kann anschliessend weiterhin explizit gesetzt werden.
 Nur Druiden koennen RP-Texte senden; andere Klassen koennen Einstellungen
 anzeigen und aendern.
 

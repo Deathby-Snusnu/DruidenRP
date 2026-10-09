@@ -43,8 +43,14 @@ local function InitializeDatabase()
             db[key] = addon.defaults[key]
         end
     end
+    if db.chatChannelVersion == nil then
+        if db.chatChannel == "AUTO" then
+            db.chatChannel = addon.defaults.chatChannel
+        end
+        db.chatChannelVersion = 1
+    end
     if db.chatChannel ~= nil and not channels[db.chatChannel] then
-        Notify("Ungueltiger Chatkanal; AUTO wird geladen.")
+        Notify("Ungueltiger Chatkanal; Standardkanal wird geladen.")
         db.chatChannel = nil
     end
     db.chatChannel = db.chatChannel or addon.defaults.chatChannel
@@ -181,7 +187,8 @@ SlashCmdList.DRUIDENRP = function(message)
     command = command and command:lower() or "help"
     if command == "help" then
         Notify("/drp list | /drp <schluessel> | /drp status")
-        Notify("/drp chance 0-100 | /drp cooldown 0-3600 | /drp channel AUTO")
+        Notify("/drp chance 0-100 | /drp cooldown 0-3600")
+        Notify("/drp channel SAY | YELL | EMOTE | PARTY | RAID | INSTANCE_CHAT | AUTO")
         Notify("Keine automatischen Zaubertexte: Befehle in Eure Zaubermakros aufnehmen.")
     elseif command == "list" then
         local keys = {}

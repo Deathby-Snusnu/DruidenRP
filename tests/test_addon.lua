@@ -102,6 +102,7 @@ check(not client.addon.TryText("MARK"), "pre-login calls are safe")
 client.command("chance 100")
 client.login()
 check(client.env.DruidenRP_CharacterDB.textChance == 30, "defaults")
+check(client.env.DruidenRP_CharacterDB.chatChannel == "SAY", "say is the default channel")
 check(client.env.RPChatMod_Settings.textChance == 99, "Paladin settings untouched")
 check(client.env.PaladinRP.untouched, "Paladin namespace untouched")
 check(client.env.DruidenRP == client.addon, "public macro API")
@@ -130,6 +131,20 @@ for _, invalid in ipairs({ "chance -1", "chance 101", "chance 3x", "chance 1.5",
 end
 check(client.env.DruidenRP_CharacterDB.textChance == 100, "invalid chance rejected")
 check(client.env.DruidenRP_CharacterDB.cooldown == 0, "invalid cooldown rejected")
+client.group, client.raid, client.instance = true, true, true
+check(client.addon.TryText("BEAR"), "default channel text in group and raid")
+check(client.messages[#client.messages].channel == "SAY", "default stays say in group and raid")
+client.command("channel PARTY")
+check(client.addon.TryText("BEAR"), "configured party channel")
+check(client.messages[#client.messages].channel == "PARTY", "party channel setting")
+client.command("channel RAID")
+check(client.addon.TryText("BEAR"), "configured raid channel")
+check(client.messages[#client.messages].channel == "RAID", "raid channel setting")
+client.command("channel INSTANCE_CHAT")
+check(client.addon.TryText("BEAR"), "configured instance channel")
+check(client.messages[#client.messages].channel == "INSTANCE_CHAT", "instance channel setting")
+client.group, client.raid, client.instance = false, false, false
+client.command("channel AUTO")
 for _, setup in ipairs({
     { false, false, false, "SAY" },
     { true, false, false, "PARTY" },
@@ -216,7 +231,10 @@ local damaged = newClient({
 })
 check(damaged.env.DruidenRP_CharacterDB.textChance == 30, "repair invalid chance")
 check(damaged.env.DruidenRP_CharacterDB.cooldown == 20, "repair invalid cooldown")
-check(damaged.env.DruidenRP_CharacterDB.chatChannel == "AUTO", "repair invalid channel")
+check(damaged.env.DruidenRP_CharacterDB.chatChannel == "SAY", "repair invalid channel")
+local migrated = newClient({ db = { chatChannel = "AUTO" } })
+check(migrated.env.DruidenRP_CharacterDB.chatChannel == "SAY", "migrate old default auto to say")
+check(migrated.env.DruidenRP_CharacterDB.chatChannelVersion == 1, "record channel migration")
 local saved = newClient({ db = { textChance = 71, cooldown = 12, chatChannel = "EMOTE",
     personalTexts = { MARK = { "Gespeichert." } } } })
 check(saved.env.DruidenRP_CharacterDB.textChance == 71, "saved chance preserved")
