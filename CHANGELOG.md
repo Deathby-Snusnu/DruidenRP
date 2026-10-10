@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-10 – Skyborne-Druiden
+
+- Rassenerkennung fuer Himmelsgeborene/Skyborne robust gegen Legacy-Tokens gemacht.
+- Skyborne-spezifische Druidentexte erweitert und staerker auf Wind, Himmel, Zephras und Natur ausgerichtet.
+- Maennliche Pronomen in /me-Aktionstexten neutralisiert, damit die Texte fuer alle Charaktere passen.
+- Himmelsgeborene verwenden bei /say Darnassisch, sofern im Client verfuegbar.
+
+
 Aenderungen an Druiden RP. Eine veroeffentlichte Release-Historie wird hier
 nicht behauptet; die TOC traegt weiterhin Version `0.1.0`.
 

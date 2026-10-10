@@ -5,7 +5,7 @@ addon.channels = {
     PARTY = true, RAID = true, INSTANCE_CHAT = true,
 }
 local racialLanguageIDs = {
-    NightElf = 2, Tauren = 3, Troll = 14, Worgen = 7,
+    NightElf = 2, Skyborne = 2, Tauren = 3, Troll = 14, Worgen = 7,
 }
 
 function addon.GetChatChannel()
@@ -34,7 +34,7 @@ function addon.GetChatChannel()
 end
 
 local function GetRacialLanguageID()
-    local _, race = UnitRace("player")
+    local race = addon.GetPlayerRaceToken()
     local wanted = racialLanguageIDs[race]
     for index = 1, GetNumLanguages() do
         local _, languageID = GetLanguageByIndex(index)

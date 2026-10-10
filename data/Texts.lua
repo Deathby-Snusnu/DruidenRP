@@ -88,7 +88,7 @@ addon.texts = {
             "Das Leben kehrt Schritt fuer Schritt zurueck.",
             "Neue Kraft waechst, solange wir ihr Raum geben.",
             "*atmet tief ein und fuehrt die Haende ruhig zusammen, waehrend neue Lebenskraft erwacht.*",
-            "*senkt die Haende langsam, als wuerde er den Rhythmus des Lebens beruhigen.*",
+            "*senkt die Haende langsam und beruhigt den Rhythmus des Lebens.*",
         },
     },
 
@@ -221,7 +221,7 @@ addon.texts = {
             "Der Boden selbst erhebt sich gegen unsere Feinde.",
             "Wo Wurzeln greifen, endet jeder Ansturm.",
             "Die Erde haelt fest, was nicht weitergehen soll.",
-            "*streckt beide Haende zum Boden aus, als wuerde er die Wurzeln unter der Erde wecken.*",
+            "*streckt beide Haende zum Boden aus und weckt die Wurzeln unter der Erde.*",
             "*reisst den Arm hoch; der Boden antwortet mit knorrigen Ranken.*",
         },
     },

@@ -1,5 +1,30 @@
 local _, addon = ...
 
+
+-- Normalisiert Custom-Rassen von WoW Forever.
+-- Der lokalisierte Rassenname wird bewusst mitgeprueft, falls der Beta-Client
+-- fuer eine neue Rasse intern noch einen Legacy-Token liefert.
+function addon.GetPlayerRaceToken()
+    local localizedRace, raceToken = UnitRace("player")
+
+    local function IsSkyborne(value)
+        if type(value) ~= "string" then
+            return false
+        end
+        local lowered = value:lower()
+        return lowered:find("skyborne", 1, true) ~= nil
+            or lowered:find("himmelsgebor", 1, true) ~= nil
+    end
+
+    if IsSkyborne(localizedRace) or IsSkyborne(raceToken) then
+        return "Skyborne"
+    end
+    if raceToken == "Scourge" then
+        return "Undead"
+    end
+    return raceToken
+end
+
 function addon.Notify(message)
     print("|cff70c090Druiden RP:|r " .. message)
 end

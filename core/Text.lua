@@ -31,7 +31,7 @@ end
 
 function addon.BuildText(key)
     local targetName = UnitExists("target") and UnitName("target") or nil
-    local _, race = UnitRace("player")
+    local race = addon.GetPlayerRaceToken()
     local personal = addon.db.personalTexts[key]
     local racial = addon.racial[race] and addon.racial[race][key]
     return ChooseText(personal or racial or addon.texts[key], targetName)
