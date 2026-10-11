@@ -35,3 +35,7 @@ nicht behauptet; die TOC traegt weiterhin Version `0.1.0`.
 - Textgrenze von 255 Bytes, keine Zeilenumbrueche oder Chat-Markierungen.
 - Gemeinsame Modulkonventionen und kanonische Kernfunktionsnamen mit den
   anderen AddOns abgestimmt und dokumentiert.
+
+## 2026-10-11 - Zielauflösung
+- RP-Zielermittlung unterscheidet jetzt freundliche, Selbst- und Pet-Fähigkeiten.
+- Feindliche aktuelle Ziele werden bei Selbst-/Freundzaubern nicht mehr irrtuemlich fuer %s verwendet.

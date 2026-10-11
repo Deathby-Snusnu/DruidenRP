@@ -1,5 +1,30 @@
 local _, addon = ...
 
+local SELF_ONLY = {
+    TRANQUILITY = true,
+    BARKSKIN = true,
+    BEAR = true,
+    CAT = true,
+    TRAVEL = true,
+    AQUATIC = true,
+    MOONKIN = true,
+    TREE = true,
+    FLIGHT = true,
+}
+
+local FRIENDLY_OR_SELF = {
+    MARK = true,
+    THORNS = true,
+    REJUVENATION = true,
+    REGROWTH = true,
+    HEALING_TOUCH = true,
+    INNERVATE = true,
+}
+
+local FRIENDLY_ONLY = {
+    REBIRTH = true,
+}
+
 local function ChooseText(pool, targetName)
     if type(pool) ~= "table" then
         return nil
@@ -25,12 +50,34 @@ local function ChooseText(pool, targetName)
         return nil
     end
     local text = usable[math.random(#usable)]
-    -- Function replacement preserves percent characters in target names.
     return (text:gsub("%%s", function() return targetName end))
 end
 
+local function FriendlyTargetName()
+    if UnitExists("target") and UnitCanAssist("player", "target") then
+        return UnitName("target")
+    end
+    return nil
+end
+
+local function ResolveTargetName(key)
+    if SELF_ONLY[key] then
+        return nil
+    end
+    if FRIENDLY_OR_SELF[key] then
+        return FriendlyTargetName() or UnitName("player")
+    end
+    if FRIENDLY_ONLY[key] then
+        return FriendlyTargetName()
+    end
+    if UnitExists("target") then
+        return UnitName("target")
+    end
+    return nil
+end
+
 function addon.BuildText(key)
-    local targetName = UnitExists("target") and UnitName("target") or nil
+    local targetName = ResolveTargetName(key)
     local race = addon.GetPlayerRaceToken()
     local personal = addon.db.personalTexts[key]
     local racial = addon.racial[race] and addon.racial[race][key]
