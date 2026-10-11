@@ -62,5 +62,11 @@ function addon.InitializeDatabase()
         db.personalTexts = nil
     end
     db.personalTexts = db.personalTexts or {}
+    if db.outputLanguage ~= nil and not addon.outputLanguages[db.outputLanguage] then
+        addon.Notify("Ungueltige Ausgabesprache; Deutsch wird verwendet.")
+        db.outputLanguage = nil
+    end
+    db.outputLanguage = db.outputLanguage or addon.defaults.outputLanguage
+    addon.runtimeOutputLanguage = db.outputLanguage
     addon.db = db
 end

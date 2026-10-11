@@ -80,6 +80,11 @@ function addon.BuildText(key)
     local targetName = ResolveTargetName(key)
     local race = addon.GetPlayerRaceToken()
     local personal = addon.db.personalTexts[key]
-    local racial = addon.racial[race] and addon.racial[race][key]
-    return ChooseText(personal or racial or addon.texts[key], targetName)
+    if personal then return ChooseText(personal, targetName) end
+    local lang = addon.GetOutputLanguage()
+    local pool = addon.GetLocalePoolExact(lang, "racial", race, key)
+        or addon.GetLocalePoolExact(lang, "texts", key)
+        or addon.GetLocalePoolExact("deDE", "racial", race, key)
+        or addon.GetLocalePoolExact("deDE", "texts", key)
+    return ChooseText(pool, targetName)
 end

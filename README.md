@@ -208,3 +208,7 @@ keine unfertige Einstellungsoberflaeche. Konfiguration erfolgt per Chatbefehl.
 
 MIT-Lizenz, Copyright (c) 2026 Hannes, siehe [LICENSE](./LICENSE).
 Die Aenderungen sind in [CHANGELOG.md](./CHANGELOG.md) dokumentiert.
+
+## RP-Ausgabesprache
+
+Die RP-Texte koennen pro Charakter auf `deDE`, `enUS` oder `frFR` gestellt werden. Beispiel: `/drp language frFR`. Fehlende Alt-Texpools fallen sicher auf Deutsch zurueck.

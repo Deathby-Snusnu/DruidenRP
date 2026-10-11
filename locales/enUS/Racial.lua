@@ -1,0 +1,3 @@
+local _, addon = ...
+
+addon.localeData.enUS.racial = {Skyborne={MARK={ziel={"May the wind carry you and the open sky watch over you, %s.","May Zephras breathe strength into your path, %s.","*raises a hand toward %s as wind and leaves circle together.*"},gruppe={"May the wind carry us and the open sky watch over us.","Between sky and earth, we keep the balance."}},REBIRTH={ziel={"Return to us, %s. The wind has not carried your name away.","Zephras knows falling paths and new updrafts. Return, %s.","*kneels beside %s as a rising current stirs dust and leaves around them.*"},gruppe={"The wind carries a companion back to us.","Even after a fall, a new updraft can begin."}}}}

@@ -1,5 +1,29 @@
 local _, addon = ...
 
+
+local function HandleLanguage(argument)
+    if argument == "" then
+        addon.Notify("Ausgabesprache: " .. addon.GetOutputLanguage() .. " (deDE, enUS, frFR)")
+        return
+    end
+    local aliases = { de = "deDE", dede = "deDE", deDE = "deDE", en = "enUS", enus = "enUS", enUS = "enUS", fr = "frFR", frfr = "frFR", frFR = "frFR" }
+    local language = aliases[argument] or aliases[string.lower(argument or "")]
+    if not language or not addon.outputLanguages[language] then
+        addon.Notify("Sprachen: deDE, enUS, frFR")
+        return
+    end
+    local ok, reason = addon.SetOutputLanguage(language)
+    if not ok then
+        if reason == "not_loaded" then
+            addon.Notify("Sprachdateien fuer " .. language .. " wurden nicht geladen. Bitte AddOn-Dateien/TOC pruefen.")
+        else
+            addon.Notify("Sprache konnte nicht aktiviert werden.")
+        end
+        return
+    end
+    addon.Notify("Ausgabesprache: " .. language .. " (" .. addon.outputLanguageNames[language] .. ")")
+end
+
 SLASH_DRUIDENRP1 = "/drp"
 SLASH_DRUIDENRP2 = "/druidenrp"
 SlashCmdList.DRUIDENRP = function(message)
@@ -14,6 +38,7 @@ SlashCmdList.DRUIDENRP = function(message)
         addon.Notify("/drp list | /drp <schluessel> | /drp status")
         addon.Notify("/drp chance 0-100 | /drp cooldown 0-3600")
         addon.Notify("/drp channel [SAY | YELL | EMOTE | PARTY | RAID | INSTANCE_CHAT | AUTO]")
+    addon.Notify("/drp language deDE|enUS|frFR")
         addon.Notify("Keine automatischen Zaubertexte: Befehle in Eure Zaubermakros aufnehmen.")
     elseif command == "list" and argument == "" then
         local keys = {}
@@ -25,8 +50,8 @@ SlashCmdList.DRUIDENRP = function(message)
             addon.Notify(key .. " - " .. addon.texts[key].name)
         end
     elseif command == "status" and argument == "" then
-        addon.Notify(string.format("Chance: %g%% | Cooldown: %gs | Kanal: %s",
-            addon.db.textChance, addon.db.cooldown, addon.db.chatChannel))
+        addon.Notify(string.format("Chance: %g%% | Cooldown: %gs | Kanal: %s | Sprache: %s",
+            addon.db.textChance, addon.db.cooldown, addon.db.chatChannel, addon.GetOutputLanguage()))
     elseif command == "chance" or command == "cooldown" then
         local maximum = command == "chance" and 100 or 3600
         local value = tonumber(argument)
@@ -37,6 +62,8 @@ SlashCmdList.DRUIDENRP = function(message)
         local key = command == "chance" and "textChance" or "cooldown"
         addon.db[key] = value
         addon.Notify(command .. ": " .. value)
+    elseif command == "language" or command == "lang" then
+        HandleLanguage(argument)
     elseif command == "channel" then
         if argument == "" then
             addon.Notify("Aktueller Chatkanal: " .. addon.db.chatChannel)

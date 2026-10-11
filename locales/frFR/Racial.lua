@@ -1,0 +1,3 @@
+local _, addon = ...
+
+addon.localeData.frFR.racial = {Skyborne={MARK={ziel={"Que le vent vous porte et que le vaste ciel veille sur vous, %s.","Que Zephras insuffle sa force à votre chemin, %s.","*lève une main vers %s tandis que vent et feuilles tourbillonnent ensemble.*"},gruppe={"Que le vent nous porte et que le vaste ciel veille sur nous.","Entre ciel et terre, nous gardons l'équilibre."}},REBIRTH={ziel={"Revenez parmi nous, %s. Le vent n'a pas emporté votre nom.","Zephras connaît les chutes et les nouveaux courants ascendants. Revenez, %s.","*s'agenouille près de %s tandis qu'un courant ascendant soulève poussière et feuilles.*"},gruppe={"Le vent ramène un compagnon parmi nous.","Même après une chute, un nouveau courant ascendant peut naître."}}}}

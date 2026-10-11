@@ -6,8 +6,14 @@
 ## SavedVariablesPerCharacter: DruidenRP_CharacterDB
 
 config\Settings.lua
-data\Texts.lua
-data\Racial.lua
+locales\Init.lua
+locales\deDE\Texts.lua
+locales\deDE\Racial.lua
+locales\enUS\Texts.lua
+locales\enUS\Racial.lua
+locales\frFR\Texts.lua
+locales\frFR\Racial.lua
+locales\Finalize.lua
 core\Database.lua
 core\Text.lua
 core\Chat.lua
