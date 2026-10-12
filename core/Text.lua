@@ -3,6 +3,7 @@ local _, addon = ...
 local SELF_ONLY = {
     TRANQUILITY = true,
     BARKSKIN = true,
+    NATURES_GRASP = true,
     BEAR = true,
     CAT = true,
     TRAVEL = true,

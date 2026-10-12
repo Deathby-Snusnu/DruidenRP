@@ -1,3 +1,10 @@
+# Changelog
+
+## 0.1.1 - 2026-10-11
+- "Griff der Natur" (`NATURES_GRASP`) in Deutsch, Englisch und Franzoesisch ergaenzt.
+- Eigene RP-Texte fuer Nachtelfen, Tauren und Himmelsgeborene hinzugefuegt.
+- Als Selbstzauber behandelt, damit ein anvisierter Gegner nicht versehentlich mit `%s` angesprochen wird.
+
 
 ## 2026-10-11 - Sprachwahl FIX2
 

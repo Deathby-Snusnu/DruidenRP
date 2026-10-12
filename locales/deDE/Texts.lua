@@ -202,6 +202,20 @@ addon.localeData.deDE.texts = {
         },
     },
 
+    NATURES_GRASP = {
+        name = "Griff der Natur",
+        gruppe = {
+            "Die Wildnis wartet nur auf den naechsten unvorsichtigen Schritt.",
+            "Kommt nur naeher. Die Erde ist bereit.",
+            "Wer mich bedrängt, wird die Antwort der Wurzeln spueren.",
+            "Die Natur greift nach jedem, der mir zu nahe kommt.",
+            "Der Boden unter meinen Fuessen ist wacher, als er aussieht.",
+            "Ein Schritt zu viel, und die Wildnis haelt fest.",
+            "*senkt eine Hand zum Boden, waehrend sich feine Wurzeln unter der Erde regen.*",
+            "*streicht mit den Fingern durch die Luft; am Boden antworten verborgene Ranken.*",
+        },
+    },
+
     ROOTS = {
         name = "Wucherwurzeln",
         ziel = {

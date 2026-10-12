@@ -29,6 +29,15 @@ addon.localeData.deDE.racial = {
                 "*senkt ehrfuerchtig den Kopf und bittet Elune um Schutz fuer die Gemeinschaft.*",
             },
         },
+        NATURES_GRASP = {
+            gruppe = {
+                "Elunes Blick ruht auf mir. Wer naeher kommt, wird von den Wurzeln empfangen.",
+                "Mondlicht ueber mir, Wurzeln unter mir. Die Wildnis ist bereit.",
+                "Cenarius lehre die Wurzeln, jeden unbedachten Schritt festzuhalten.",
+                "*senkt die Fingerspitzen zum Boden, waehrend silbriges Licht ueber verborgene Wurzeln gleitet.*",
+                "*hebt kurz den Blick zum Himmel und legt dann die Hand auf die Erde, als wuerde Elune die Wurzeln wecken.*",
+            },
+        },
         REBIRTH = {
             ziel = {
                 "Elune wache ueber Euch, %s. Kehrt zu uns zurueck.",
@@ -74,6 +83,15 @@ addon.localeData.deDE.racial = {
                 "Wind, Erde und Sonne begleiten unseren Weg.",
                 "*legt eine Hand auf die Erde und die andere aufs Herz und ruft die Erdenmutter an.*",
                 "*stampft einmal ruhig auf und senkt respektvoll den Kopf.*",
+            },
+        },
+        NATURES_GRASP = {
+            gruppe = {
+                "Die Erdenmutter kennt jeden Schritt. Wer zu nahe kommt, wird festgehalten.",
+                "Die Erde traegt mich und haelt jene, die mich bedraengen.",
+                "Kommt naeher, wenn Ihr wollt. Die Erdenmutter ist bereits wach.",
+                "*legt die Hand fest auf den Boden und lauscht einen Moment der Erdenmutter.*",
+                "*stampft einmal ruhig auf; tief unter den Hufen beginnen Wurzeln sich zu regen.*",
             },
         },
         REBIRTH = {
@@ -125,6 +143,15 @@ addon.localeData.deDE.racial = {
                 "Unter offenem Himmel bleibt unser Blick frei.",
                 "*breitet die Arme aus und laesst den Wind durch die Reihen der Gefaehrten ziehen.*",
                 "*hebt das Gesicht in die Stroemung und lauscht einen Moment dem Himmel.*",
+            },
+        },
+        NATURES_GRASP = {
+            gruppe = {
+                "Der Wind lockt sie heran. Die Wurzeln halten sie fest.",
+                "Zwischen Himmel und Erde wartet die Wildnis auf den naechsten falschen Schritt.",
+                "Zephras fuehrt den Wind. Die Wurzeln uebernehmen den Rest.",
+                "*streicht mit den Fingern durch die Luft, waehrend sich am Boden bereits die ersten Wurzeln regen.*",
+                "*laesst einen kurzen Windwirbel ueber den Boden ziehen; darunter antworten verborgene Ranken.*",
             },
         },
         REBIRTH = {
