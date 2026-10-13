@@ -1,51 +1,23 @@
 # Changelog
 
-## 0.1.1 - 2026-10-11
-- "Griff der Natur" (`NATURES_GRASP`) in Deutsch, Englisch und Franzoesisch ergaenzt.
-- Eigene RP-Texte fuer Nachtelfen, Tauren und Himmelsgeborene hinzugefuegt.
-- Als Selbstzauber behandelt, damit ein anvisierter Gegner nicht versehentlich mit `%s` angesprochen wird.
-
-
-## 2026-10-11 - Sprachwahl FIX2
-
-- Ausgabesprache besitzt nun einen expliziten Laufzeitwert und wird beim Umschalten sofort aktiviert.
-- Locale-Tabellen deDE/enUS/frFR werden robust einzeln initialisiert.
-- Eine Sprache kann nur aktiviert werden, wenn ihre Dateien tatsaechlich geladen wurden.
-# Localization update 2026-10-11
-
-- RP output language can be selected per character: deDE, enUS, frFR.
-- Text data moved into language-specific `locales/<locale>/` files.
-- German is used as a safe fallback for legacy pools not translated yet.
-- Command: `language` / `lang` on the add-on slash command.
-
-# Changelog
-
-## 2026-10-10 – Skyborne-Druiden
-
-- Rassenerkennung fuer Himmelsgeborene/Skyborne robust gegen Legacy-Tokens gemacht.
-- Skyborne-spezifische Druidentexte erweitert und staerker auf Wind, Himmel, Zephras und Natur ausgerichtet.
-- Maennliche Pronomen in /me-Aktionstexten neutralisiert, damit die Texte fuer alle Charaktere passen.
-- Himmelsgeborene verwenden bei /say Darnassisch, sofern im Client verfuegbar.
-
-
-Aenderungen an Druiden RP. Eine veroeffentlichte Release-Historie wird hier
-nicht behauptet; die TOC traegt weiterhin Version `0.1.0`.
+Aenderungen an DruidenRP. Eine nicht belegte Release-Historie wird nicht
+rekonstruiert.
 
 ## [Unreleased]
 
 ### Geaendert
 
 - Datenbank, Textauswahl, Chat, Cooldown und Befehle in Kernmodule getrennt.
-- Oeffentliche `DruidenRP.TryText`-API fuer die dokumentierten Makros exportiert.
-- Ganze Zahlen fuer Textchance (0-100) und Cooldown (0-3600) strikt validiert,
+- Oeffentliche `DruidenRP.TryText`-API fuer dokumentierte Makros exportiert.
+- Chance (0-100) und Cooldown (0-3600) als ganze Zahlen strikt validiert,
   einschliesslich gespeicherter Werte.
-- Gueltige gespeicherte AUTO-Kanaele bleiben erhalten, statt beim ersten
-  Login auf SAY umgestellt zu werden. Bereits frueher migrierte Werte werden
-  nicht nachtraeglich umgeschrieben.
+- Gueltige gespeicherte AUTO-Kanaele bleiben erhalten; frueher migrierte
+  Werte werden nicht nachtraeglich umgeschrieben.
 - `/drp channel` zeigt ohne Argument den aktuellen Kanal.
 - README und TOC-gesteuerte Tests an die Modulstruktur angepasst.
-- Legacy-Tests an die tatsaechlich erforderliche `C_ChatInfo`-API angepasst.
-- `*...*`-markierte Handlungstexte ohne Sternchen als `/me`-Emotes senden.
+- Legacy-Tests an die benoetigte `C_ChatInfo`-API angepasst.
+- Mit `*...*` markierte Handlungstexte werden ohne Sternchen als `/me`-Emotes
+  gesendet.
 
 ### Beibehalten
 
@@ -53,9 +25,24 @@ nicht behauptet; die TOC traegt weiterhin Version `0.1.0`.
 - Eigene Texte vor Volkstexten und allgemeinen Texten; vorhandene Textbestaende.
 - Kein oeffentlicher Fallback fuer nicht verfuegbare explizite Gruppenkanaele.
 - Textgrenze von 255 Bytes, keine Zeilenumbrueche oder Chat-Markierungen.
-- Gemeinsame Modulkonventionen und kanonische Kernfunktionsnamen mit den
-  anderen AddOns abgestimmt und dokumentiert.
+- Gemeinsame Modulkonventionen und kanonische Kernfunktionsnamen.
 
-## 2026-10-11 - Zielauflösung
-- RP-Zielermittlung unterscheidet jetzt freundliche, Selbst- und Pet-Fähigkeiten.
-- Feindliche aktuelle Ziele werden bei Selbst-/Freundzaubern nicht mehr irrtuemlich fuer %s verwendet.
+## [0.1.1] - 2026-10-11
+
+### Hinzugefuegt
+
+- "Griff der Natur" (`NATURES_GRASP`) in Deutsch, Englisch und Franzoesisch.
+- Eigene Texte fuer Nachtelfen, Tauren und Himmelsgeborene.
+
+### Geaendert
+
+- Rassenerkennung fuer Himmelsgeborene/Skyborne gegen Legacy-Tokens
+  abgesichert und die Texte um Natur-, Wind- und Himmelsthemen erweitert.
+- Himmelsgeborene verwenden bei SAY Darnassisch, sofern im Client verfuegbar.
+- Zielaufloesung unterscheidet feindliche, freundliche und Selbstzauber;
+  feindliche Ziele werden bei Selbst-/Freundzaubern nicht fuer `%s` verwendet.
+- Die RP-Ausgabesprache kann pro Charakter auf `deDE`, `enUS` oder `frFR`
+  gestellt werden. Locale-Tabellen werden separat initialisiert; nicht
+  geladene Sprachdateien lassen sich nicht aktivieren.
+- Maennliche Pronomen in `/me`-Aktionstexten wurden neutralisiert.
+- `NATURES_GRASP` wird als Selbstzauber behandelt.

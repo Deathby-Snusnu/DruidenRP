@@ -1,7 +1,7 @@
 # Druiden RP
 
 Eigenstaendiges WoW-RP-Chat-Addon, abgeleitet vom Aufbau und Verhalten von
-PaladinRP (Hannes, MIT). PaladinRP wird weder veraendert noch als Abhaengigkeit
+PaladinRP (Hannes Weichselbaum; Code MPL-2.0, RP-Texte CC BY-SA 4.0). PaladinRP wird weder veraendert noch als Abhaengigkeit
 benoetigt. Die Texte sind neu fuer Druiden geschrieben.
 
 ## Beschreibung
@@ -59,6 +59,7 @@ anzeigen und aendern.
 | `/drp cooldown <0-3600>` | Cooldown in Sekunden, ganze Zahl |
 | `/drp channel` | Aktuellen Kanal anzeigen |
 | `/drp channel <kanal>` | Kanal setzen |
+| `/drp language [deDE\|enUS\|frFR]` | RP-Ausgabesprache anzeigen oder setzen |
 
 `/druidenrp` unterstuetzt dieselben Befehle. Gross-/Kleinschreibung der
 Befehle und Textschluessel spielt keine Rolle. Ungueltige Zahlen,
@@ -73,6 +74,7 @@ Kanaleinstellung `EMOTE` bleibt ebenfalls unterstuetzt.
 
 | Einstellung | Standard | Werte |
 | --- | --- | --- |
+| `outputLanguage` | `deDE` | `deDE`, `enUS`, `frFR` |
 | `textChance` | `30` | Ganze Zahl 0-100 |
 | `cooldown` | `20` | Ganze Zahl 0-3600 Sekunden |
 | `chatChannel` | `SAY` | SAY, YELL, EMOTE, PARTY, RAID, INSTANCE_CHAT, AUTO |
@@ -81,6 +83,9 @@ Die Standardwerte stehen in [config/Settings.lua](./config/Settings.lua).
 Alle Einstellungen und eigene Texte werden in `DruidenRP_CharacterDB` pro
 Charakter gespeichert. Gueltige gespeicherte Werte, einschliesslich AUTO,
 bleiben erhalten; ungueltige Werte werden mit einer Meldung repariert.
+Die RP-Ausgabesprache kann pro Charakter mit
+`/drp language deDE|enUS|frFR` gewaehlt werden. Fehlende aeltere Textpools
+fallen auf Deutsch zurueck.
 
 Die Ausgabe erfolgt standardmaessig in SAY, auch wenn der Charakter in einer
 Gruppe oder einem Schlachtzug ist. Der Kanal kann jederzeit per
@@ -168,13 +173,17 @@ Zeilenumbrueche oder `|`-Chatmarkierungen.
 - [core/Chat.lua](./core/Chat.lua): Kanaele, Volkssprache und Textpruefung.
 - [core/Cooldown.lua](./core/Cooldown.lua): Wartezeit nach Textausgabe.
 - [core/Commands.lua](./core/Commands.lua): Chatbefehle.
-- [data/Texts.lua](./data/Texts.lua): 20 allgemeine Textkategorien.
-- [data/Racial.lua](./data/Racial.lua): Nachtelfen- und Taurentexte.
+- `locales/<locale>/Texts.lua`: Allgemeine Textkategorien auf Deutsch,
+  Englisch und Franzoesisch.
+- `locales/<locale>/Racial.lua`: Nachtelfen- und Taurentexte je Sprache.
 
 Die Kernmodule verwenden die projektweit einheitlichen Funktionen
 `BuildText`, `SendText`, `CooldownReady` und `StartCooldown`. `TryText` bleibt
 die oeffentliche manuelle Schnittstelle; Textauswahl und Prioritaet bleiben
 druidenspezifisch.
+
+Die Dateien unter `data/` sind nicht in der TOC-Ladefolge enthalten; die
+Laufzeittexte liegen in den Locale-Dateien.
 
 ## Tests
 
@@ -192,7 +201,7 @@ Kanalwahl, Textgrenzen und Cooldown.
 
 ## Kompatibilitaet
 
-Die TOC deklariert Interface `16001` und Version `0.1.0`. Im Spiel zeigt
+Die TOC deklariert Interface `16001` und Version `0.1.1`. Im Spiel zeigt
 `/dump select(4, GetBuildInfo())` die benoetigte Interface-Version.
 Die TOC-Version ist keine Zusage fuer jeden Classic- oder Beta-Build.
 Erforderlich ist `C_ChatInfo.SendChatMessage`; ein Client mit ausschliesslich
@@ -206,9 +215,10 @@ keine unfertige Einstellungsoberflaeche. Konfiguration erfolgt per Chatbefehl.
 
 ## Lizenz
 
-MIT-Lizenz, Copyright (c) 2026 Hannes, siehe [LICENSE](./LICENSE).
-Die Aenderungen sind in [CHANGELOG.md](./CHANGELOG.md) dokumentiert.
+Dieses AddOn verwendet eine **geteilte Lizenzierung nach Dateityp**:
 
-## RP-Ausgabesprache
+- Programmcode: **Mozilla Public License 2.0 (MPL-2.0)**, siehe [LICENSE](./LICENSE).
+- RP-Dialoge, Emote-/Ambient-Texte und Übersetzungen: **CC BY-SA 4.0**, siehe [LICENSE-TEXTS](./LICENSE-TEXTS).
+- Die verbindliche Zuordnung einer Lua-Datei steht in ihrem `SPDX-License-Identifier`.
 
-Die RP-Texte koennen pro Charakter auf `deDE`, `enUS` oder `frFR` gestellt werden. Beispiel: `/drp language frFR`. Fehlende Alt-Texpools fallen sicher auf Deutsch zurueck.
+Weitere Hinweise und der Markenhinweis stehen in [NOTICE](./NOTICE).
