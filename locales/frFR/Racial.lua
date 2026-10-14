@@ -9,6 +9,8 @@ local _, addon = ...
 
 addon.localeData.frFR.racial = {
     NightElf = {
+        MARK={ziel={"Que la lumiere d Elune et la benediction de la nature vous accompagnent, %s.","Que Cenarius veille sur votre chemin, %s.","*leve une main vers %s tandis qu une pale lueur lunaire effleure l air.*"},gruppe={"Que la lumiere d Elune nous guide.","Sous la lune et les etoiles, nous marchons ensemble."}},
+        REBIRTH={ziel={"Qu Elune veille sur vous, %s. Revenez parmi nous.","Le Reve d emeraude ne vous a pas abandonne, %s.","*s agenouille pres de %s tandis qu une douce lueur argentee se rassemble.*"},gruppe={"La lumiere d Elune montre le chemin du retour.","Le Reve garde encore l espoir d un nouveau commencement."}},
         NATURES_GRASP = { gruppe = {
             "Elune veille sur moi. Ceux qui approchent rencontreront les racines.",
             "Clair de lune au-dessus, racines au-dessous. La nature est prête.",
@@ -17,6 +19,8 @@ addon.localeData.frFR.racial = {
         }},
     },
     Tauren = {
+        MARK={ziel={"Que la Terre-Mere pose sa main sur vous, %s.","Que la terre porte vos pas et que le ciel veille sur vous, %s.","*pose une main pres de %s tandis que poussiere et herbe frissonnent dans le vent.*"},gruppe={"Que la Terre-Mere veille sur nous.","Que la terre porte nos pas et que le ciel veille sur nous."}},
+        REBIRTH={ziel={"La Terre-Mere vous rappelle, %s.","Revenez au troupeau, %s. Des chemins vous attendent encore.","*s agenouille pres de %s et pose la paume sur la terre.*"},gruppe={"La Terre-Mere accorde un nouveau commencement.","Un compagnon revient au troupeau."}},
         NATURES_GRASP = { gruppe = {
             "La Terre-Mère connaît chaque pas. Ceux qui s'approchent trop seront retenus.",
             "La terre me porte et retient ceux qui me menacent.",

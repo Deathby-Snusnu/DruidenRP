@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0 - 2026-10-14
+- Einheitliche Textauswahl und Fallback-Logik.
+- Personaltexte fallen bei unbrauchbarem Pool sauber auf Locale-Texte zurueck.
+- Erweiterter DE/EN/FR-Textvorrat.
+
 Aenderungen an DruidenRP. Eine nicht belegte Release-Historie wird nicht
 rekonstruiert.
 
