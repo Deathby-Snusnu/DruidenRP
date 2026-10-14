@@ -45,7 +45,7 @@ SlashCmdList.DRUIDENRP = function(message)
         addon.Notify("/drp list | /drp <schluessel> | /drp status")
         addon.Notify("/drp chance 0-100 | /drp cooldown 0-3600")
         addon.Notify("/drp channel [SAY | YELL | EMOTE | PARTY | RAID | INSTANCE_CHAT | AUTO]")
-    addon.Notify("/drp language deDE|enUS|frFR")
+        addon.Notify("/drp language deDE|enUS|frFR")
         addon.Notify("Keine automatischen Zaubertexte: Befehle in Eure Zaubermakros aufnehmen.")
     elseif command == "list" and argument == "" then
         local keys = {}
