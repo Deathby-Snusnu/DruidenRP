@@ -7,8 +7,15 @@ benoetigt. Die Texte sind neu fuer Druiden geschrieben.
 ## Beschreibung
 
 Zufaellige Rollenspieltexte fuer Druidenzauber und Gestalten, mit eigenen
-Texten pro Charakter und Volkstexten fuer Nachtelfen und Tauren.
+Texten pro Charakter und Volkstexten fuer Nachtelfen, Tauren und
+Himmelsgeborene (`Skyborne`).
 Die Ausgabe erfolgt ausschliesslich auf manuellen Aufruf.
+
+## Dokumentation
+
+[Sammlungsuebersicht](../README.md) · [Changelog](CHANGELOG.md) ·
+[Texteditor und Handbuch](../RPTextStudio/HANDBUCH.md) ·
+[Verpackung und gemeinsame Tests](../VERPACKUNG.md)
 
 ## Installation
 
@@ -23,7 +30,9 @@ zusaetzlichen verschachtelten Projektordner. WoW neu starten, das Addon in der
 Charakterauswahl aktivieren und mit einem Druiden einloggen.
 
 Das ZIP enthaelt Spieldateien, Dokumentation und Lizenz, aber keine Tests,
-Git- oder Editor-Dateien. Die Tests sind nur im Quellprojekt vorhanden.
+Git- oder IDE-Dateien innerhalb des AddOns. Das Sammlungspaket kann
+zusaetzlich RPTextStudio und gemeinsame Hilfsskripte enthalten.
+Die Tests sind nur im Quellprojekt vorhanden.
 
 ## Schnellstart
 
@@ -105,18 +114,28 @@ damit nicht als erfolgreiche Zustellung bestaetigen.
 | --- | --- |
 | Segen | MARK, GIFT, THORNS |
 | Heilung | REJUVENATION, REGROWTH, HEALING_TOUCH, TRANQUILITY |
-| Unterstuetzung | INNERVATE, REBIRTH, BARKSKIN |
+| Unterstuetzung | INNERVATE, REBIRTH, BARKSKIN, NATURES_GRASP |
 | Kampf | ROOTS, MOONFIRE, WRATH |
 | Gestalten | BEAR, CAT, TRAVEL, AQUATIC, MOONKIN, TREE, FLIGHT |
 
 Gestalten und Faehigkeiten sind Textkategorien, keine Pruefung auf bekannte
 Zauber. Nicht alle Faehigkeiten existieren in jedem Classic-Client.
-Nachtelfen und Tauren haben eigene Texte fuer MARK und REBIRTH;
-andere Voelker verwenden die allgemeinen Texte.
+Nachtelfen, Tauren und Himmelsgeborene haben eigene Texte fuer MARK,
+REBIRTH und NATURES_GRASP; andere Voelker verwenden allgemeine Texte.
+Dies beschreibt vorhandene Textdaten, nicht die im jeweiligen Client
+spielbaren Voelker.
 
-Bei vorhandenem Ziel wird der Zieltext genutzt, sonst ein allgemeiner Text.
-`%s` wird durch den Zielnamen ersetzt. Bei offensiven und heilenden Texten
-liegt die Auswahl eines passenden Ziels beim Spieler.
+`%s` wird durch den fuer den Schluessel aufgeloesten Namen ersetzt.
+MARK, THORNS, REJUVENATION, REGROWTH, HEALING_TOUCH und INNERVATE verwenden
+ein freundliches Ziel, sonst den eigenen Charakter. REBIRTH verwendet nur
+ein freundliches Ziel. Gestalten, TRANQUILITY, BARKSKIN und NATURES_GRASP
+verwenden keinen Zielnamen. Andere Schluessel verwenden das aktuelle Ziel,
+sofern vorhanden; das AddOn waehlt kein Spielziel und bestaetigt keinen
+Zaubererfolg.
+
+In strukturierten Pools wird mit Namen zuerst `ziel`, dann `gruppe`
+versucht. Danach koennen auch zielunabhaengige Eintraege aus `ziel`
+verwendet werden. Ohne aufgeloesten Namen sind Eintraege mit `%s` unbrauchbar.
 
 ## Makros
 
@@ -142,9 +161,17 @@ ebenfalls einen RP-Text ausloesen. Alternativ ist
 Chatbeschraenkungen des Clients gelten weiterhin; insbesondere in
 SAY/YELL den Aufruf ueber einen manuellen Befehl oder Tastendruck ausloesen.
 
+`DruidenRP.TryText(key)` erwartet einen nicht leeren String und normalisiert
+ihn auf Grossbuchstaben. Die Funktion liefert `true` nach einem erfolgreichen
+Chat-API-Aufruf, sonst `false`. Vor `PLAYER_LOGIN` werden Aufrufe mit einer
+Meldung abgelehnt.
+
 ## Eigene Texte
 
-Die Auswahl folgt der Reihenfolge eigene Texte, Volkstexte, allgemeine Texte.
+Ein nutzbarer persoenlicher Text hat Vorrang. Andernfalls wird der erste
+vorhandene Locale-Pool gewaehlt: Volkstext der Ausgabesprache, allgemeiner
+Text der Ausgabesprache, deutscher Volkstext, deutscher allgemeiner Text.
+Ein vorhandener, aber unbrauchbarer Locale-Pool wird nicht uebersprungen.
 Eigene Texte koennen in `DruidenRP_CharacterDB.personalTexts` unter einem
 grossgeschriebenen Schluessel abgelegt werden, zum Beispiel per Makro:
 
@@ -152,9 +179,10 @@ grossgeschriebenen Schluessel abgelegt werden, zum Beispiel per Makro:
 /run DruidenRP_CharacterDB.personalTexts.MARK={"Die Wildnis begleitet Euch, %s.","Der Wald begleitet uns."}
 ```
 
-Ohne Ziel werden Eintraege mit `%s` nicht ausgegeben. Alternativ wird eine
-Tabelle mit `ziel = {...}` und `gruppe = {...}` unterstuetzt. Ungueltige oder
-leere eigene Textpools werden gemeldet. Zum Entfernen einer Anpassung:
+Ohne aufgeloesten Namen werden Eintraege mit `%s` nicht ausgegeben. Alternativ wird eine
+Tabelle mit `ziel = {...}` und `gruppe = {...}` unterstuetzt. Liefert der
+persoenliche Pool keinen nutzbaren Text, wird der Locale-Pool versucht.
+Zum Entfernen einer Anpassung:
 
 ```text
 /run DruidenRP_CharacterDB.personalTexts.MARK=nil
@@ -175,7 +203,9 @@ Zeilenumbrueche oder `|`-Chatmarkierungen.
 - [core/Commands.lua](./core/Commands.lua): Chatbefehle.
 - `locales/<locale>/Texts.lua`: Allgemeine Textkategorien auf Deutsch,
   Englisch und Franzoesisch.
-- `locales/<locale>/Racial.lua`: Nachtelfen- und Taurentexte je Sprache.
+- `locales/<locale>/Racial.lua`: Nachtelfen-, Tauren- und Skyborne-Texte je Sprache.
+- `locales/<locale>/Expansion.lua`: zusaetzliche Laufzeittexte; vom
+  Texteditor nicht bearbeitet.
 
 Die Kernmodule verwenden die projektweit einheitlichen Funktionen
 `BuildText`, `SendText`, `CooldownReady` und `StartCooldown`. `TryText` bleibt
@@ -201,7 +231,7 @@ Kanalwahl, Textgrenzen und Cooldown.
 
 ## Kompatibilitaet
 
-Die TOC deklariert Interface `16001` und Version `0.1.1`. Im Spiel zeigt
+Die TOC deklariert Interface `16001` und Version `0.2.0`. Im Spiel zeigt
 `/dump select(4, GetBuildInfo())` die benoetigte Interface-Version.
 Die TOC-Version ist keine Zusage fuer jeden Classic- oder Beta-Build.
 Erforderlich ist `C_ChatInfo.SendChatMessage`; ein Client mit ausschliesslich

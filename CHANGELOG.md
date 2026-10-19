@@ -1,14 +1,14 @@
 # Changelog
 
-## 0.2.0 - 2026-10-14
-- Einheitliche Textauswahl und Fallback-Logik.
-- Personaltexte fallen bei unbrauchbarem Pool sauber auf Locale-Texte zurueck.
-- Erweiterter DE/EN/FR-Textvorrat.
-
 Aenderungen an DruidenRP. Eine nicht belegte Release-Historie wird nicht
 rekonstruiert.
 
 ## [Unreleased]
+
+### Dokumentation
+
+- Versionsangabe mit der TOC abgeglichen; Zielregeln, persoenlicher Fallback,
+  NATURES_GRASP, Locale-Erweiterungen und gemeinsame Anleitungen dokumentiert.
 
 ### Geaendert
 
@@ -31,6 +31,14 @@ rekonstruiert.
 - Kein oeffentlicher Fallback fuer nicht verfuegbare explizite Gruppenkanaele.
 - Textgrenze von 255 Bytes, keine Zeilenumbrueche oder Chat-Markierungen.
 - Gemeinsame Modulkonventionen und kanonische Kernfunktionsnamen.
+
+## [0.2.0] - 2026-10-14
+
+### Geaendert
+
+- Einheitliche Textauswahl und Fallback-Logik.
+- Personaltexte fallen bei unbrauchbarem Pool sauber auf Locale-Texte zurueck.
+- Erweiterter DE/EN/FR-Textvorrat.
 
 ## [0.1.1] - 2026-10-11
 
