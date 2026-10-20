@@ -179,9 +179,10 @@ grossgeschriebenen Schluessel abgelegt werden, zum Beispiel per Makro:
 /run DruidenRP_CharacterDB.personalTexts.MARK={"Die Wildnis begleitet Euch, %s.","Der Wald begleitet uns."}
 ```
 
-Ohne aufgeloesten Namen werden Eintraege mit `%s` nicht ausgegeben. Alternativ wird eine
-Tabelle mit `ziel = {...}` und `gruppe = {...}` unterstuetzt. Liefert der
-persoenliche Pool keinen nutzbaren Text, wird der Locale-Pool versucht.
+Ohne aufgeloesten Namen werden Eintraege mit `%s` nicht ausgegeben.
+Alternativ wird eine Tabelle mit `ziel = {...}` und `gruppe = {...}`
+unterstuetzt. Liefert der persoenliche Pool keinen nutzbaren Text, wird der
+Locale-Pool versucht.
 Zum Entfernen einer Anpassung:
 
 ```text
