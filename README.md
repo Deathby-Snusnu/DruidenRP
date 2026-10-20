@@ -1,19 +1,20 @@
 # Druiden RP
 
-Eigenstaendiges WoW-RP-Chat-Addon, abgeleitet vom Aufbau und Verhalten von
-PaladinRP (Hannes Weichselbaum; Code MPL-2.0, RP-Texte CC BY-SA 4.0). PaladinRP wird weder veraendert noch als Abhaengigkeit
-benoetigt. Die Texte sind neu fuer Druiden geschrieben.
+Eigenständiges WoW-RP-Chat-Add-on, abgeleitet vom Aufbau und Verhalten von
+PaladinRP (Hannes Weichselbaum; Code MPL-2.0, RP-Texte CC BY-SA 4.0).
+PaladinRP wird weder verändert noch als Abhängigkeit benötigt. Die Texte
+sind neu für Druiden geschrieben.
 
 ## Beschreibung
 
-Zufaellige Rollenspieltexte fuer Druidenzauber und Gestalten, mit eigenen
-Texten pro Charakter und Volkstexten fuer Nachtelfen, Tauren und
+Zufällige Rollenspieltexte für Druidenzauber und Gestalten, mit eigenen
+Texten pro Charakter und Volkstexten für Nachtelfen, Tauren und
 Himmelsgeborene (`Skyborne`).
-Die Ausgabe erfolgt ausschliesslich auf manuellen Aufruf.
+Die Ausgabe erfolgt ausschließlich auf manuellen Aufruf.
 
 ## Dokumentation
 
-[Sammlungsuebersicht](../README.md) · [Changelog](CHANGELOG.md) ·
+[Sammlungsübersicht](../README.md) · [Changelog](CHANGELOG.md) ·
 [Texteditor und Handbuch](../RPTextStudio/HANDBUCH.md) ·
 [Verpackung und gemeinsame Tests](../VERPACKUNG.md)
 
@@ -26,12 +27,12 @@ Den Ordner `DruidenRP` aus dem ZIP in diesen Ordner entpacken:
 ```
 
 Danach muss `AddOns\DruidenRP\DruidenRP.toc` vorhanden sein, ohne einen
-zusaetzlichen verschachtelten Projektordner. WoW neu starten, das Addon in der
+zusätzlichen verschachtelten Projektordner. WoW neu starten, das Add-on in der
 Charakterauswahl aktivieren und mit einem Druiden einloggen.
 
-Das ZIP enthaelt Spieldateien, Dokumentation und Lizenz, aber keine Tests,
-Git- oder IDE-Dateien innerhalb des AddOns. Das Sammlungspaket kann
-zusaetzlich RPTextStudio und gemeinsame Hilfsskripte enthalten.
+Das ZIP enthält Spieldateien, Dokumentation und Lizenz, aber keine Tests,
+Git- oder IDE-Dateien innerhalb des Add-ons. Das Sammlungspaket kann
+zusätzlich RPTextStudio und gemeinsame Hilfsskripte enthalten.
 Die Tests sind nur im Quellprojekt vorhanden.
 
 ## Schnellstart
@@ -51,18 +52,18 @@ Die Tests sind nur im Quellprojekt vorhanden.
 ```
 
 `/druidenrp` ist ein Alias. Standard: 30 Prozent Textchance, 20 Sekunden
-Cooldown. Der erste Text ist sofort moeglich. Chance und Cooldown gelten
-auch fuer manuelle Befehle; Chance 0 deaktiviert die Ausgabe.
-Nur Druiden koennen RP-Texte senden; andere Klassen koennen Einstellungen
-anzeigen und aendern.
+Cooldown. Der erste Text ist sofort möglich. Chance und Cooldown gelten
+auch für manuelle Befehle; Chance 0 deaktiviert die Ausgabe.
+Nur Druiden können RP-Texte senden; andere Klassen können Einstellungen
+anzeigen und ändern.
 
 ## Befehle
 
 | Befehl | Funktion |
 | --- | --- |
 | `/drp` oder `/drp help` | Hilfe anzeigen |
-| `/drp list` | Allgemeine Textschluessel auflisten |
-| `/drp <schluessel>` | RP-Text versuchen |
+| `/drp list` | Allgemeine Textschlüssel auflisten |
+| `/drp <schlüssel>` | RP-Text versuchen |
 | `/drp status` | Einstellungen anzeigen |
 | `/drp chance <0-100>` | Textchance, ganze Zahl |
 | `/drp cooldown <0-3600>` | Cooldown in Sekunden, ganze Zahl |
@@ -70,14 +71,14 @@ anzeigen und aendern.
 | `/drp channel <kanal>` | Kanal setzen |
 | `/drp language [deDE\|enUS\|frFR]` | RP-Ausgabesprache anzeigen oder setzen |
 
-`/druidenrp` unterstuetzt dieselben Befehle. Gross-/Kleinschreibung der
-Befehle und Textschluessel spielt keine Rolle. Ungueltige Zahlen,
-Dezimalwerte und zusaetzliche Argumente werden abgelehnt, nicht begrenzt.
+`/druidenrp` unterstützt dieselben Befehle. Groß-/Kleinschreibung der
+Befehle und Textschlüssel spielt keine Rolle. Ungültige Zahlen,
+Dezimalwerte und zusätzliche Argumente werden abgelehnt, nicht begrenzt.
 
 Texte zwischen `*Sternchen*` werden als `/me`-Emote ausgegeben; die
 Sternchen werden entfernt. Solche Handlungen verwenden immer `EMOTE`,
-unabhaengig vom eingestellten Sprachkanal. Die bestehende manuelle
-Kanaleinstellung `EMOTE` bleibt ebenfalls unterstuetzt.
+unabhängig vom eingestellten Sprachkanal. Die bestehende manuelle
+Kanaleinstellung `EMOTE` bleibt ebenfalls unterstützt.
 
 ## Einstellungen
 
@@ -90,56 +91,57 @@ Kanaleinstellung `EMOTE` bleibt ebenfalls unterstuetzt.
 
 Die Standardwerte stehen in [config/Settings.lua](./config/Settings.lua).
 Alle Einstellungen und eigene Texte werden in `DruidenRP_CharacterDB` pro
-Charakter gespeichert. Gueltige gespeicherte Werte, einschliesslich AUTO,
-bleiben erhalten; ungueltige Werte werden mit einer Meldung repariert.
+Charakter gespeichert. Gültige gespeicherte Werte, einschließlich AUTO,
+bleiben erhalten; ungültige Werte werden mit einer Meldung repariert.
 Die RP-Ausgabesprache kann pro Charakter mit
-`/drp language deDE|enUS|frFR` gewaehlt werden. Fehlende aeltere Textpools
-fallen auf Deutsch zurueck.
+`/drp language deDE|enUS|frFR` gewählt werden. Fehlende ältere Textpools
+fallen auf Deutsch zurück.
 
-Die Ausgabe erfolgt standardmaessig in SAY, auch wenn der Charakter in einer
+Die Ausgabe erfolgt standardmäßig in SAY, auch wenn der Charakter in einer
 Gruppe oder einem Schlachtzug ist. Der Kanal kann jederzeit per
 `/drp channel <kanal>` gesetzt werden: SAY, YELL, EMOTE, PARTY, RAID,
 INSTANCE_CHAT oder AUTO. PARTY, RAID und INSTANCE_CHAT sind damit gezielt
-waehlbar. AUTO waehlt Instanzgruppe, Schlachtzug, Gruppe oder SAY, in dieser
-Reihenfolge. Ein nicht verfuegbarer Gruppenkanal wird gemeldet, nicht auf
-einen oeffentlichen Kanal umgeleitet. SAY/YELL verwenden die bekannte
-Volkssprache, wenn verfuegbar.
+wählbar. AUTO wählt Instanzgruppe, Schlachtzug, Gruppe oder SAY, in dieser
+Reihenfolge. Ein nicht verfügbarer Gruppenkanal wird gemeldet, nicht auf
+einen öffentlichen Kanal umgeleitet. SAY/YELL verwenden die bekannte
+Volkssprache, wenn verfügbar.
+
 Ein abgelehnter Text startet keinen Cooldown. Bei einem erfolgreichen
-Chat-API-Aufruf beginnt der Cooldown; Serverbeschraenkungen lassen sich
-damit nicht als erfolgreiche Zustellung bestaetigen.
+Chat-API-Aufruf beginnt der Cooldown; Serverbeschränkungen lassen sich
+damit nicht als erfolgreiche Zustellung bestätigen.
 
-## Textschluessel
+## Textschlüssel
 
-| Bereich | Schluessel |
+| Bereich | Schlüssel |
 | --- | --- |
 | Segen | MARK, GIFT, THORNS |
 | Heilung | REJUVENATION, REGROWTH, HEALING_TOUCH, TRANQUILITY |
-| Unterstuetzung | INNERVATE, REBIRTH, BARKSKIN, NATURES_GRASP |
+| Unterstützung | INNERVATE, REBIRTH, BARKSKIN, NATURES_GRASP |
 | Kampf | ROOTS, MOONFIRE, WRATH |
 | Gestalten | BEAR, CAT, TRAVEL, AQUATIC, MOONKIN, TREE, FLIGHT |
 
-Gestalten und Faehigkeiten sind Textkategorien, keine Pruefung auf bekannte
-Zauber. Nicht alle Faehigkeiten existieren in jedem Classic-Client.
-Nachtelfen, Tauren und Himmelsgeborene haben eigene Texte fuer MARK,
-REBIRTH und NATURES_GRASP; andere Voelker verwenden allgemeine Texte.
+Gestalten und Fähigkeiten sind Textkategorien, keine Prüfung auf bekannte
+Zauber. Nicht alle Fähigkeiten existieren in jedem Classic-Client.
+Nachtelfen, Tauren und Himmelsgeborene haben eigene Texte für MARK,
+REBIRTH und NATURES_GRASP; andere Völker verwenden allgemeine Texte.
 Dies beschreibt vorhandene Textdaten, nicht die im jeweiligen Client
-spielbaren Voelker.
+spielbaren Völker.
 
-`%s` wird durch den fuer den Schluessel aufgeloesten Namen ersetzt.
+`%s` wird durch den für den Schlüssel aufgelösten Namen ersetzt.
 MARK, THORNS, REJUVENATION, REGROWTH, HEALING_TOUCH und INNERVATE verwenden
 ein freundliches Ziel, sonst den eigenen Charakter. REBIRTH verwendet nur
 ein freundliches Ziel. Gestalten, TRANQUILITY, BARKSKIN und NATURES_GRASP
-verwenden keinen Zielnamen. Andere Schluessel verwenden das aktuelle Ziel,
-sofern vorhanden; das AddOn waehlt kein Spielziel und bestaetigt keinen
+verwenden keinen Zielnamen. Andere Schlüssel verwenden das aktuelle Ziel,
+sofern vorhanden; das Add-on wählt kein Spielziel und bestätigt keinen
 Zaubererfolg.
 
 In strukturierten Pools wird mit Namen zuerst `ziel`, dann `gruppe`
-versucht. Danach koennen auch zielunabhaengige Eintraege aus `ziel`
-verwendet werden. Ohne aufgeloesten Namen sind Eintraege mit `%s` unbrauchbar.
+versucht. Danach können auch zielunabhängige Einträge aus `ziel`
+verwendet werden. Ohne aufgelösten Namen sind Einträge mit `%s` unbrauchbar.
 
 ## Makros
 
-Wie PaladinRP reagiert das Addon nicht automatisch auf Zauberereignisse.
+Wie PaladinRP reagiert das Add-on nicht automatisch auf Zauberereignisse.
 Ein Makro kann Zauber und RP-Aufruf verbinden:
 
 ```text
@@ -149,39 +151,39 @@ Ein Makro kann Zauber und RP-Aufruf verbinden:
 ```
 
 ```text
-#showtooltip Baerengestalt
-/cast Baerengestalt
+#showtooltip Bärengestalt
+/cast Bärengestalt
 /drp bear
 ```
 
 Zaubernamen an die Sprache und Version des Clients anpassen. Der Textaufruf
-prueft nicht, ob der Zauber erfolgreich war: Ein fehlgeschlagener Zauber kann
-ebenfalls einen RP-Text ausloesen. Alternativ ist
-`/run DruidenRP.TryText("MARK")` moeglich.
-Chatbeschraenkungen des Clients gelten weiterhin; insbesondere in
-SAY/YELL den Aufruf ueber einen manuellen Befehl oder Tastendruck ausloesen.
+prüft nicht, ob der Zauber erfolgreich war: Ein fehlgeschlagener Zauber kann
+ebenfalls einen RP-Text auslösen. Alternativ ist
+`/run DruidenRP.TryText("MARK")` möglich.
+Chatbeschränkungen des Clients gelten weiterhin; insbesondere in
+SAY/YELL den Aufruf über einen manuellen Befehl oder Tastendruck auslösen.
 
 `DruidenRP.TryText(key)` erwartet einen nicht leeren String und normalisiert
-ihn auf Grossbuchstaben. Die Funktion liefert `true` nach einem erfolgreichen
+ihn auf Großbuchstaben. Die Funktion liefert `true` nach einem erfolgreichen
 Chat-API-Aufruf, sonst `false`. Vor `PLAYER_LOGIN` werden Aufrufe mit einer
 Meldung abgelehnt.
 
 ## Eigene Texte
 
-Ein nutzbarer persoenlicher Text hat Vorrang. Andernfalls wird der erste
-vorhandene Locale-Pool gewaehlt: Volkstext der Ausgabesprache, allgemeiner
+Ein nutzbarer persönlicher Text hat Vorrang. Andernfalls wird der erste
+vorhandene Locale-Pool gewählt: Volkstext der Ausgabesprache, allgemeiner
 Text der Ausgabesprache, deutscher Volkstext, deutscher allgemeiner Text.
-Ein vorhandener, aber unbrauchbarer Locale-Pool wird nicht uebersprungen.
-Eigene Texte koennen in `DruidenRP_CharacterDB.personalTexts` unter einem
-grossgeschriebenen Schluessel abgelegt werden, zum Beispiel per Makro:
+Ein vorhandener, aber unbrauchbarer Locale-Pool wird nicht übersprungen.
+Eigene Texte können in `DruidenRP_CharacterDB.personalTexts` unter einem
+großgeschriebenen Schlüssel abgelegt werden, zum Beispiel per Makro:
 
 ```text
 /run DruidenRP_CharacterDB.personalTexts.MARK={"Die Wildnis begleitet Euch, %s.","Der Wald begleitet uns."}
 ```
 
-Ohne aufgeloesten Namen werden Eintraege mit `%s` nicht ausgegeben.
+Ohne aufgelösten Namen werden Einträge mit `%s` nicht ausgegeben.
 Alternativ wird eine Tabelle mit `ziel = {...}` und `gruppe = {...}`
-unterstuetzt. Liefert der persoenliche Pool keinen nutzbaren Text, wird der
+unterstützt. Liefert der persönliche Pool keinen nutzbaren Text, wird der
 Locale-Pool versucht.
 Zum Entfernen einer Anpassung:
 
@@ -189,28 +191,29 @@ Zum Entfernen einer Anpassung:
 /run DruidenRP_CharacterDB.personalTexts.MARK=nil
 ```
 
-Texte duerfen nach Ersetzung maximal 255 Bytes enthalten und keine
-Zeilenumbrueche oder `|`-Chatmarkierungen.
+Texte dürfen nach Ersetzung maximal 255 Bytes enthalten und keine
+Zeilenumbrüche oder `|`-Chatmarkierungen.
 
 ## Projektstruktur
 
-- [DruidenRP.toc](./DruidenRP.toc): Metadaten und Lade-Reihenfolge.
-- [DruidenRP.lua](./DruidenRP.lua): Login und oeffentliche `DruidenRP.TryText`-API.
+- [DruidenRP.toc](./DruidenRP.toc): Metadaten und Ladereihenfolge.
+- [DruidenRP.lua](./DruidenRP.lua): Login und öffentliche `DruidenRP.TryText`-API.
 - [config/Settings.lua](./config/Settings.lua): Standardwerte.
 - [core/Database.lua](./core/Database.lua): Charakterdaten und Validierung.
 - [core/Text.lua](./core/Text.lua): Poolauswahl und Platzhalterersetzung.
-- [core/Chat.lua](./core/Chat.lua): Kanaele, Volkssprache und Textpruefung.
+- [core/Chat.lua](./core/Chat.lua): Kanäle, Volkssprache und Textprüfung.
 - [core/Cooldown.lua](./core/Cooldown.lua): Wartezeit nach Textausgabe.
 - [core/Commands.lua](./core/Commands.lua): Chatbefehle.
 - `locales/<locale>/Texts.lua`: Allgemeine Textkategorien auf Deutsch,
-  Englisch und Franzoesisch.
-- `locales/<locale>/Racial.lua`: Nachtelfen-, Tauren- und Skyborne-Texte je Sprache.
-- `locales/<locale>/Expansion.lua`: zusaetzliche Laufzeittexte; vom
+  Englisch und Französisch.
+- `locales/<locale>/Racial.lua`: Nachtelfen-, Tauren- und Skyborne-Texte je
+  Sprache.
+- `locales/<locale>/Expansion.lua`: zusätzliche Laufzeittexte; vom
   Texteditor nicht bearbeitet.
 
 Die Kernmodule verwenden die projektweit einheitlichen Funktionen
 `BuildText`, `SendText`, `CooldownReady` und `StartCooldown`. `TryText` bleibt
-die oeffentliche manuelle Schnittstelle; Textauswahl und Prioritaet bleiben
+die öffentliche manuelle Schnittstelle; Textauswahl und Priorität bleiben
 druidenspezifisch.
 
 Die Dateien unter `data/` sind nicht in der TOC-Ladefolge enthalten; die
@@ -219,37 +222,40 @@ Laufzeittexte liegen in den Locale-Dateien.
 ## Tests
 
 Im Quellprojekt, nicht im Installations-ZIP, liegt
-[tests/test_addon.lua](./tests/test_addon.lua). Vom AddOn-Ordner aus mit
-Lua 5.1 oder 5.4 ausfuehren:
+[tests/test_addon.lua](./tests/test_addon.lua). Vom Add-on-Ordner aus mit
+Lua 5.1 oder 5.4 ausführen:
 
 ```powershell
 lua tests\test_addon.lua
 ```
 
-Der Test laedt die Dateien in TOC-Reihenfolge und simuliert die WoW-APIs.
-Er prueft unter anderem Datenbankerhalt, Klassenbeschraenkung,
+Der Test lädt die Dateien in TOC-Reihenfolge und simuliert die WoW-APIs.
+Er prüft unter anderem Datenbankerhalt, Klassenbeschränkung,
 Kanalwahl, Textgrenzen und Cooldown.
 
-## Kompatibilitaet
+## Kompatibilität
 
 Die TOC deklariert Interface `16001` und Version `0.2.0`. Im Spiel zeigt
-`/dump select(4, GetBuildInfo())` die benoetigte Interface-Version.
-Die TOC-Version ist keine Zusage fuer jeden Classic- oder Beta-Build.
-Erforderlich ist `C_ChatInfo.SendChatMessage`; ein Client mit ausschliesslich
+`/dump select(4, GetBuildInfo())` die benötigte Interface-Version.
+Die TOC-Version ist keine Zusage für jeden Classic- oder Beta-Build.
+Erforderlich ist `C_ChatInfo.SendChatMessage`; ein Client mit ausschließlich
 der alten globalen Chat-API wird mit einer Meldung abgewiesen.
-Ein echter Test im WoW-Client steht noch aus; Lua-Tests pruefen nur die
+Ein echter Test im WoW-Client steht noch aus; Lua-Tests prüfen nur die
 simulierten APIs.
 
 Eigener Namensraum, `/drp` und `DruidenRP_CharacterDB` vermeiden Konflikte
 mit PaladinRP. Keine externe Bibliothek, kein automatischer Chat-Spam und
-keine unfertige Einstellungsoberflaeche. Konfiguration erfolgt per Chatbefehl.
+keine unfertige Einstellungsoberfläche. Konfiguration erfolgt per Chatbefehl.
 
 ## Lizenz
 
-Dieses AddOn verwendet eine **geteilte Lizenzierung nach Dateityp**:
+Dieses Add-on verwendet eine **geteilte Lizenzierung nach Dateityp**:
 
-- Programmcode: **Mozilla Public License 2.0 (MPL-2.0)**, siehe [LICENSE](./LICENSE).
-- RP-Dialoge, Emote-/Ambient-Texte und Übersetzungen: **CC BY-SA 4.0**, siehe [LICENSE-TEXTS](./LICENSE-TEXTS).
-- Die verbindliche Zuordnung einer Lua-Datei steht in ihrem `SPDX-License-Identifier`.
+- Programmcode: **Mozilla Public License 2.0 (MPL-2.0)**, siehe
+  [LICENSE](./LICENSE).
+- RP-Dialoge, Emote-/Ambient-Texte und Übersetzungen: **CC BY-SA 4.0**, siehe
+  [LICENSE-TEXTS](./LICENSE-TEXTS).
+- Die verbindliche Zuordnung einer Lua-Datei steht in ihrem
+  `SPDX-License-Identifier`.
 
 Weitere Hinweise und der Markenhinweis stehen in [NOTICE](./NOTICE).
