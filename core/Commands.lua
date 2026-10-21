@@ -31,6 +31,36 @@ local function HandleLanguage(argument)
     addon.Notify("Ausgabesprache: " .. language .. " (" .. addon.outputLanguageNames[language] .. ")")
 end
 
+local function HandleAmbient(argument)
+    local cmd, rest = (argument or ""):match("^(%S+)%s*(.-)%s*$")
+    cmd = cmd and cmd:lower() or "status"
+    if cmd == "on" or cmd == "off" then
+        addon.db.ambientEnabled = cmd == "on"
+        addon.ResetAmbientTimer()
+    elseif cmd == "chance" then
+        local n = tonumber(rest)
+        if not n or n%1~=0 or n<0 or n>100 then addon.Notify("ambient chance 0-100");return end
+        addon.db.ambientChance=n
+    elseif cmd == "interval" then
+        local a,b=rest:match("^(%d+)%s+(%d+)$")
+        a,b=tonumber(a),tonumber(b)
+        if not a or not b or a<30 or b<a or a>3600 or b>7200 then addon.Notify("ambient interval MIN MAX (30..3600 / 30..7200)");return end
+        addon.db.ambientMinInterval=a;addon.db.ambientMaxInterval=b;addon.ResetAmbientTimer()
+    elseif cmd == "combat" then
+        if rest ~= "on" and rest ~= "off" then addon.Notify("ambient combat on|off");return end
+        addon.db.ambientInCombat = rest == "on"
+    elseif cmd == "test" then
+        local category=rest:upper()
+        if category=="" then category=nil end
+        if category and not addon.GetLocalePoolExact(addon.GetOutputLanguage(),"ambient",category) then addon.Notify("Unbekannte Kategorie: "..category);return end
+        if not addon.TryAmbient(category,true) then addon.Notify("Ambient derzeit nicht verfuegbar (Klasse/Kampf/Cooldown/Aktivierung)."); end
+        return
+    elseif cmd ~= "status" then
+        addon.Notify("ambient on|off, chance N, interval MIN MAX, combat on|off, test [KATEGORIE], status");return
+    end
+    addon.Notify(string.format("Ambient: %s | Chance: %d%% | Intervall: %d-%ds | Kampf: %s", addon.db.ambientEnabled and "on" or "off", addon.db.ambientChance, addon.db.ambientMinInterval, addon.db.ambientMaxInterval, addon.db.ambientInCombat and "on" or "off"))
+end
+
 SLASH_DRUIDENRP1 = "/drp"
 SLASH_DRUIDENRP2 = "/druidenrp"
 SlashCmdList.DRUIDENRP = function(message)
@@ -71,6 +101,8 @@ SlashCmdList.DRUIDENRP = function(message)
         addon.Notify(command .. ": " .. value)
     elseif command == "language" or command == "lang" then
         HandleLanguage(argument)
+    elseif command == "ambient" then
+        HandleAmbient(argument)
     elseif command == "channel" then
         if argument == "" then
             addon.Notify("Aktueller Chatkanal: " .. addon.db.chatChannel)

@@ -259,3 +259,7 @@ Dieses Add-on verwendet eine **geteilte Lizenzierung nach Dateityp**:
   `SPDX-License-Identifier`.
 
 Weitere Hinweise und der Markenhinweis stehen in [NOTICE](./NOTICE).
+
+## Ambient-Erweiterung (21.10.2026)
+
+Klassen- und rassenspezifisches, dreisprachiges Ambient-System; Konfiguration mit `/drp ambient`. Details in `AMBIENT.md`.

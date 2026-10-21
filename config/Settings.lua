@@ -12,4 +12,9 @@ addon.defaults = {
     textChance = 30,
     cooldown = 20,
     chatChannel = "SAY",
+    ambientEnabled = true,
+    ambientMinInterval = 180,
+    ambientMaxInterval = 420,
+    ambientChance = 70,
+    ambientInCombat = false,
 }

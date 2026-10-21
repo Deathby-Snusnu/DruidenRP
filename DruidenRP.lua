@@ -23,6 +23,7 @@ function addon.TryText(key)
         addon.Notify("Benutzung: /drp <textschluessel>. /drp list zeigt alle Texte.")
         return false
     end
+    if addon.FlushPendingAmbient and addon.FlushPendingAmbient() then return true end
     key = key:upper()
     local text = addon.BuildText(key)
     if not text then
@@ -49,6 +50,7 @@ eventFrame:SetScript("OnEvent", function()
     local _, class = UnitClass("player")
     addon.isDruid = class == "DRUID"
     addon.ready = true
+    addon.StartAmbientSystem()
     addon.Notify("geladen. Befehle: /drp und /druidenrp.")
     if not addon.isDruid then
         addon.Notify("Kein Druide: Einstellungen verfuegbar, RP-Ausgabe deaktiviert.")

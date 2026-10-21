@@ -59,3 +59,11 @@ rekonstruiert.
   geladene Sprachdateien lassen sich nicht aktivieren.
 - Maennliche Pronomen in `/me`-Aktionstexten wurden neutralisiert.
 - `NATURES_GRASP` wird als Selbstzauber behandelt.
+
+## Ambient-Erweiterung (21.10.2026)
+
+Klassen- und rassenspezifisches, dreisprachiges Ambient-System; Konfiguration mit `/drp ambient`. Details in `AMBIENT.md`.
+
+## Ambient-Textausbau (21.10.2026)
+
+- Sechs neue Varianten je allgemeiner Kategorie, plus Rassentexte fuer Nachtelf, Tauren und Himmelsgeborene. Keine Aenderung an den Ambient-Triggern oder SavedVariables.
