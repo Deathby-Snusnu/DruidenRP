@@ -10,7 +10,12 @@ local _, addon = ...
 addon.localeData.enUS.racial = {
     NightElf = {
         MARK={ziel={"May Elune's light and the blessing of the wilds go with you, %s.","May Cenarius watch your path, %s.","*raises a hand toward %s as pale moonlight brushes the air.*"},gruppe={"May Elune's light guide us.","Under moon and stars, we walk together."}},
-        REBIRTH={ziel={"Elune watch over you, %s. Return to us.","The Emerald Dream has not released you, %s.","*kneels beside %s as a soft silver glow gathers.*"},gruppe={"Elune's light shows the way back.","The Dream still holds hope for another beginning."}},
+        REBIRTH={ziel={
+            "Elune watch over you, %s. Return to us.",
+            "The Emerald Dream has not released you, %s.",
+            "*kneels beside %s as a soft silver glow gathers.*",
+            "The Dream opens the way to you once more, %s.",
+        },gruppe={"Elune's light shows the way back.","The Dream still holds hope for another beginning."}},
         NATURES_GRASP = { gruppe = {
             "Elune watches over me. Those who come closer will meet the roots.",
             "Moonlight above, roots below. The wilds are ready.",

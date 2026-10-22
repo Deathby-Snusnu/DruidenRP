@@ -10,7 +10,12 @@ local _, addon = ...
 addon.localeData.frFR.racial = {
     NightElf = {
         MARK={ziel={"Que la lumiere d Elune et la benediction de la nature vous accompagnent, %s.","Que Cenarius veille sur votre chemin, %s.","*leve une main vers %s tandis qu une pale lueur lunaire effleure l air.*"},gruppe={"Que la lumiere d Elune nous guide.","Sous la lune et les etoiles, nous marchons ensemble."}},
-        REBIRTH={ziel={"Qu Elune veille sur vous, %s. Revenez parmi nous.","Le Reve d emeraude ne vous a pas abandonne, %s.","*s agenouille pres de %s tandis qu une douce lueur argentee se rassemble.*"},gruppe={"La lumiere d Elune montre le chemin du retour.","Le Reve garde encore l espoir d un nouveau commencement."}},
+        REBIRTH={ziel={
+            "Qu Elune veille sur vous, %s. Revenez parmi nous.",
+            "Le Reve d emeraude ne vous a pas abandonne, %s.",
+            "*s agenouille pres de %s tandis qu une douce lueur argentee se rassemble.*",
+            "Le Rêve vous ouvre une fois de plus le chemin, %s.",
+        },gruppe={"La lumiere d Elune montre le chemin du retour.","Le Reve garde encore l espoir d un nouveau commencement."}},
         NATURES_GRASP = { gruppe = {
             "Elune veille sur moi. Ceux qui approchent rencontreront les racines.",
             "Clair de lune au-dessus, racines au-dessous. La nature est prête.",
