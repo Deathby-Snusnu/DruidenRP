@@ -30,10 +30,10 @@ Danach muss `AddOns\DruidenRP\DruidenRP.toc` vorhanden sein, ohne einen
 zusätzlichen verschachtelten Projektordner. WoW neu starten, das Add-on in der
 Charakterauswahl aktivieren und mit einem Druiden einloggen.
 
-Das ZIP enthält Spieldateien, Dokumentation und Lizenz, aber keine Tests,
-Git- oder IDE-Dateien innerhalb des Add-ons. Das Sammlungspaket kann
-zusätzlich RPTextStudio und gemeinsame Hilfsskripte enthalten.
-Die Tests sind nur im Quellprojekt vorhanden.
+Das Installations-ZIP enthält Laufzeitdateien und Lizenz-/Rechtehinweise,
+aber keine Entwicklungsdokumentation, Tests, Git- oder IDE-Dateien.
+Gemeinsame Dokumentation und Tests sind im vollständigen Quellprojekt
+verfügbar.
 
 ## Schnellstart
 
@@ -62,7 +62,9 @@ anzeigen und ändern.
 | Befehl | Funktion |
 | --- | --- |
 | `/drp` oder `/drp help` | Hilfe anzeigen |
-| `/drp list` | Allgemeine Textschlüssel auflisten |
+| `/drp list` | Für den Charakter verwendbare Textschlüssel auflisten |
+| `/drp list racial` | Schlüssel des aktuellen Volks auflisten |
+| `/drp list all` | Rassen- und klassenspezifische Schlüssel mit Herkunft auflisten |
 | `/drp <schlüssel>` | RP-Text versuchen |
 | `/drp status` | Einstellungen anzeigen |
 | `/drp chance <0-100>` | Textchance, ganze Zahl |
@@ -70,6 +72,9 @@ anzeigen und ändern.
 | `/drp channel` | Aktuellen Kanal anzeigen |
 | `/drp channel <kanal>` | Kanal setzen |
 | `/drp language [deDE\|enUS\|frFR]` | RP-Ausgabesprache anzeigen oder setzen |
+
+Die Herkunfts- und Fallback-Regeln der drei Listenvarianten stehen im
+[Listen-Handbuch](../../docs/LISTEN-HANDBUCH.md).
 
 `/druidenrp` unterstützt dieselben Befehle. Groß-/Kleinschreibung der
 Befehle und Textschlüssel spielt keine Rolle. Ungültige Zahlen,
@@ -235,7 +240,7 @@ Kanalwahl, Textgrenzen und Cooldown.
 
 ## Kompatibilität
 
-Die TOC deklariert Interface `16001` und Version `0.2.0`. Im Spiel zeigt
+Die TOC deklariert Interface `16001` und Version `0.3.0`. Im Spiel zeigt
 `/dump select(4, GetBuildInfo())` die benötigte Interface-Version.
 Die TOC-Version ist keine Zusage für jeden Classic- oder Beta-Build.
 Erforderlich ist `C_ChatInfo.SendChatMessage`; ein Client mit ausschließlich

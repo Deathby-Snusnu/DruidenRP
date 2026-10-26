@@ -3,15 +3,19 @@
 Aenderungen an DruidenRP. Eine nicht belegte Release-Historie wird nicht
 rekonstruiert.
 
-## [Unreleased]
+## [0.3.0] - 2026-10-26
 
 ### Dokumentation
 
 - Versionsangabe mit der TOC abgeglichen; Zielregeln, persoenlicher Fallback,
   NATURES_GRASP, Locale-Erweiterungen und gemeinsame Anleitungen dokumentiert.
 
-### Geaendert
+### Hinzugefuegt
+- Dynamische Schluessellisten mit `/drp list`, `/drp list racial` und
+  `/drp list all` ergaenzt.
 
+### Geaendert
+- Nachtelfische REBIRTH-Texte in Englisch und Franzoesisch erweitert.
 - Datenbank, Textauswahl, Chat, Cooldown und Befehle in Kernmodule getrennt.
 - Oeffentliche `DruidenRP.TryText`-API fuer dokumentierte Makros exportiert.
 - Chance (0-100) und Cooldown (0-3600) als ganze Zahlen strikt validiert,
