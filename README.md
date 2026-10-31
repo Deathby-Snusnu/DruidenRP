@@ -14,13 +14,13 @@ Die Ausgabe erfolgt ausschließlich auf manuellen Aufruf.
 
 ## Dokumentation
 
-[Sammlungsübersicht](../../README.md) · [Changelog](CHANGELOG.md) ·
-[Texteditor und Handbuch](../../docs/RPTextStudio/HANDBUCH.md) ·
-[Verpackung und gemeinsame Tests](../../docs/VERPACKUNG.md)
+[Sammlungsübersicht](https://github.com/Deathby-Snusnu/RPAddOns/blob/main/README.md) · [Changelog](CHANGELOG.md) ·
+[Texteditor und Handbuch](https://github.com/Deathby-Snusnu/RPAddOns/blob/main/docs/RPTextStudio/HANDBUCH.md) ·
+[Verpackung und gemeinsame Tests](https://github.com/Deathby-Snusnu/RPAddOns/blob/main/docs/VERPACKUNG.md)
 
-Die gemeinsamen relativen Links setzen den vollständigen Sammlungs-Checkout
-voraus. Im einzelnen AddOn-Repository sind die Anleitungen über das
-[Sammlungsrepository](https://github.com/Deathby-Snusnu/RPAddOns) erreichbar.
+Die gemeinsamen Handbücher sind über die oben verlinkten absoluten URLs auch im
+einzelnen AddOn-Repository erreichbar; ein vollständiger Sammlungs-Checkout ist
+dafür nicht erforderlich.
 
 ## Installation
 
