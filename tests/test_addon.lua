@@ -24,6 +24,7 @@ local function newClient(options)
         DruidenRP_CharacterDB = options.db,
         PaladinRP = { untouched = true },
         RPChatMod_Settings = { textChance = 99 },
+        RPChatMod = options.rpChatMod,
         DruidenRP = nil,
     }, { __index = _G })
     env._G = env
@@ -99,6 +100,7 @@ client.command("chance 100")
 client.command("cooldown 20")
 check(client.addon.TryText("mark"), "first text allowed at time zero")
 check(client.messages[1].channel == "SAY", "solo channel")
+check(client.env.RPChatMod == nil, "optional resolver is absent")
 check(client.messages[1].language == 2, "locale independent night elf language")
 check(not client.messages[1].text:find("%s", 1, true), "no unresolved target")
 check(not client.addon.TryText("MARK"), "cooldown applied")
@@ -237,6 +239,38 @@ check(#legacy.messages == 0, "legacy-only client never silently sends")
 local tauren = newClient({ race = "Tauren", db = { textChance = 100, cooldown = 0 } })
 check(tauren.addon.TryText("MARK"), "tauren text")
 check(tauren.messages[1].language == 3, "tauren racial language")
+local invalidResolver = newClient({
+    race = "Tauren",
+    rpChatMod = { GetChatLanguageID = true },
+    db = { textChance = 100, cooldown = 0 },
+})
+check(invalidResolver.addon.SendText("fallback"), "non-callable resolver uses racial fallback")
+check(invalidResolver.messages[1].language == 3, "non-callable resolver sends racial language")
+local resolverCalls = {}
+local resolvedLanguages = newClient({
+    rpChatMod = {
+        GetChatLanguageID = function(channel)
+            resolverCalls[#resolverCalls + 1] = channel
+            return channel == "SAY" and 101 or 202
+        end,
+    },
+    db = { textChance = 100, cooldown = 0 },
+})
+check(resolvedLanguages.addon.SendText("speech"), "shared resolver SAY speech")
+check(resolverCalls[1] == "SAY", "shared resolver receives SAY channel")
+check(resolvedLanguages.messages[1].language == 101, "shared resolver language sent for SAY")
+resolvedLanguages.command("channel YELL")
+check(resolvedLanguages.addon.SendText("speech"), "shared resolver YELL speech")
+check(resolverCalls[2] == "YELL", "shared resolver receives YELL channel")
+check(resolvedLanguages.messages[2].language == 202, "shared resolver language sent for YELL")
+resolvedLanguages.command("channel EMOTE")
+check(resolvedLanguages.addon.SendText("*waves*"), "emote skips shared resolver")
+check(#resolverCalls == 2, "emote never invokes shared resolver")
+resolvedLanguages.group = true
+resolvedLanguages.command("channel PARTY")
+check(resolvedLanguages.addon.SendText("group speech"), "group channel skips shared resolver")
+check(resolvedLanguages.messages[4].language == nil, "group channel has no language")
+check(#resolverCalls == 2, "group channel never invokes shared resolver")
 local unsupported = newClient({ noChat = true, db = { textChance = 100, cooldown = 0 } })
 check(not unsupported.addon.TryText("MARK"), "missing chat API reported")
 local otherClass = newClient({ class = "PALADIN" })
