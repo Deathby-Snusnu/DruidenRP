@@ -3,6 +3,11 @@
 Aenderungen an DruidenRP. Eine nicht belegte Release-Historie wird nicht
 rekonstruiert.
 
+## Aktueller Quellstand: 0.3.1 (unveroeffentlicht)
+
+- Versionsangabe aktualisiert und gemeinsame Dokumentationslinks fuer
+  einzelne AddOn-Checkouts erlaeutert.
+
 ## [0.3.0] - 2026-10-26
 
 ### Dokumentation

@@ -18,6 +18,10 @@ Die Ausgabe erfolgt ausschließlich auf manuellen Aufruf.
 [Texteditor und Handbuch](../../docs/RPTextStudio/HANDBUCH.md) ·
 [Verpackung und gemeinsame Tests](../../docs/VERPACKUNG.md)
 
+Die gemeinsamen relativen Links setzen den vollständigen Sammlungs-Checkout
+voraus. Im einzelnen AddOn-Repository sind die Anleitungen über das
+[Sammlungsrepository](https://github.com/Deathby-Snusnu/RPAddOns) erreichbar.
+
 ## Installation
 
 Den Ordner `DruidenRP` aus dem ZIP in diesen Ordner entpacken:
@@ -240,7 +244,7 @@ Kanalwahl, Textgrenzen und Cooldown.
 
 ## Kompatibilität
 
-Die TOC deklariert Interface `16001` und Version `0.3.0`. Im Spiel zeigt
+Die TOC deklariert Interface `16001` und Version `0.3.1`. Im Spiel zeigt
 `/dump select(4, GetBuildInfo())` die benötigte Interface-Version.
 Die TOC-Version ist keine Zusage für jeden Classic- oder Beta-Build.
 Erforderlich ist `C_ChatInfo.SendChatMessage`; ein Client mit ausschließlich

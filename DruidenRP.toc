@@ -2,7 +2,7 @@
 ## Title: Druiden RP
 ## Notes: Rollenspieltexte fuer Druiden, abgeleitet von PaladinRP
 ## Author: Hannes; DruidenRP adaptation
-## Version: 0.3.0
+## Version: 0.3.1
 ## SavedVariablesPerCharacter: DruidenRP_CharacterDB
 
 config\Settings.lua
