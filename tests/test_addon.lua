@@ -227,7 +227,7 @@ for key, pool in pairs(client.addon.texts) do
     check(client.addon.TryText(key), key .. " with target")
     check(not client.messages[#client.messages].text:find("%s", 1, true), "resolved placeholder")
 end
-check(categories == 20, "all twenty categories present")
+check(categories == 59, "all 59 existing and added druid categories present")
 for race, pools in pairs(client.addon.racial) do
     client.race = race
     for key in pairs(pools) do
