@@ -32,6 +32,7 @@ local function newClient(options)
     env._G = env
     env.print = function(text) state.notices[#state.notices + 1] = text end
     env.GetTime = function() return state.time end
+    env.UnitAffectingCombat = function() return options.combat == true end
     env.UnitClass = function() return "class", state.class end
     env.UnitRace = function() return "race", state.race, state.raceId end
     env.UnitFactionGroup = function() return state.faction end
@@ -69,8 +70,10 @@ local function newClient(options)
                 check(event == "PLAYER_LOGIN", "only player login is registered")
             end,
             SetScript = function(_, name, handler)
-                check(name == "OnEvent", "login event handler")
-                state.login = handler
+                check(name == "OnEvent" or name == "OnUpdate",
+                    "login or ambient frame handler")
+                if name == "OnEvent" then state.login = handler
+                else state.update = handler end
             end,
         }
     end
