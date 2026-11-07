@@ -30,6 +30,10 @@ local function newClient(options)
         DruidenRP = nil,
     }, { __index = _G })
     env._G = env
+    -- Stable selection: ordinary chat is tested separately from /me.
+    env.math = setmetatable({
+        random = function(a, b) return b and a or 1 end,
+    }, { __index = math })
     env.print = function(text) state.notices[#state.notices + 1] = text end
     env.GetTime = function() return state.time end
     env.UnitAffectingCombat = function() return options.combat == true end
