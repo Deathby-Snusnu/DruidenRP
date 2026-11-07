@@ -1,0 +1,13 @@
+name: DruidenRP 0.4.0 content
+on:
+  push:
+  pull_request:
+jobs:
+  source-content:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lua 5.4
+        run: sudo apt-get update && sudo apt-get install -y lua5.4
+      - name: Run druid runtime regression
+        run: lua5.4 tests/test_addon.lua

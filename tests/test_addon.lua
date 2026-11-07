@@ -2,7 +2,7 @@ local files = {}
 for line in io.lines("DruidenRP.toc") do
     local file = line:match("^%s*(.-)%s*$")
     if file ~= "" and not file:find("^#") then
-        files[#files + 1] = file:gsub("/", "\\")
+        files[#files + 1] = file:gsub("\\", package.config:sub(1, 1))
     end
 end
 local checks = 0
@@ -16,6 +16,8 @@ local function newClient(options)
     local state = {
         time = 0, messages = {}, notices = {},
         race = options.race or "NightElf",
+        raceId = options.raceId, faction = options.faction,
+        hostile = options.hostile or false,
         class = options.class or "DRUID",
         target = nil, group = false, raid = false, instance = false,
     }
@@ -28,10 +30,18 @@ local function newClient(options)
         DruidenRP = nil,
     }, { __index = _G })
     env._G = env
+    -- Stable selection: ordinary chat is tested separately from /me.
+    env.math = setmetatable({
+        random = function(a, b) return b and a or 1 end,
+    }, { __index = math })
     env.print = function(text) state.notices[#state.notices + 1] = text end
     env.GetTime = function() return state.time end
+    env.UnitAffectingCombat = function() return options.combat == true end
     env.UnitClass = function() return "class", state.class end
-    env.UnitRace = function() return "race", state.race end
+    env.UnitRace = function() return options.localizedRace or "race", state.race, state.raceId end
+    env.UnitFactionGroup = function() return state.faction end
+    env.UnitCanAttack = function() return state.target ~= nil and state.hostile end
+    env.UnitCanAssist = function() return state.target ~= nil and not state.hostile end
     env.UnitExists = function() return state.target ~= nil end
     env.UnitName = function() return state.target end
     env.IsInGroup = function(category)
@@ -64,8 +74,10 @@ local function newClient(options)
                 check(event == "PLAYER_LOGIN", "only player login is registered")
             end,
             SetScript = function(_, name, handler)
-                check(name == "OnEvent", "login event handler")
-                state.login = handler
+                check(name == "OnEvent" or name == "OnUpdate",
+                    "login or ambient frame handler")
+                if name == "OnEvent" then state.login = handler
+                else state.update = handler end
             end,
         }
     end
@@ -190,7 +202,7 @@ db.personalTexts.MARK = { "Eigener Text fuer %s." }
 check(client.addon.TryText("MARK"), "personal pool priority")
 check(client.messages[#client.messages].text == "Eigener Text fuer Ziel%1.", "personal replacement")
 client.target = nil
-check(not client.addon.TryText("MARK"), "target-only personal pool without target")
+check(client.addon.TryText("MARK"), "unusable personal target-only pool falls back to safe general text")
 db.personalTexts.MARK = { ziel = { "Hallo %s." }, gruppe = { "Hallo Wald." } }
 check(client.addon.TryText("MARK"), "personal generic fallback")
 check(client.messages[#client.messages].text == "Hallo Wald.", "personal generic content")
@@ -203,6 +215,11 @@ check(not client.addon.TryText("MARK"), "chat markup rejected")
 db.personalTexts.MARK = { string.rep("x", 255) }
 check(client.addon.TryText("MARK"), "255 byte boundary accepted")
 db.personalTexts.MARK = nil
+client.target = "HOSTILE_PERSONAL_SENTINEL"
+db.personalTexts.DASH = { "Mein Dash-Text fuer %s." }
+check(client.addon.BuildText("DASH") == "Mein Dash-Text fuer HOSTILE_PERSONAL_SENTINEL.",
+    "personal DASH text retains legacy target resolution")
+db.personalTexts.DASH = nil
 check(not client.addon.TryText("UNKNOWN"), "unknown key")
 
 local categories = 0
@@ -215,7 +232,7 @@ for key, pool in pairs(client.addon.texts) do
     check(client.addon.TryText(key), key .. " with target")
     check(not client.messages[#client.messages].text:find("%s", 1, true), "resolved placeholder")
 end
-check(categories == 20, "all twenty categories present")
+check(categories == 59, "all 59 existing and added druid categories present")
 for race, pools in pairs(client.addon.racial) do
     client.race = race
     for key in pairs(pools) do
@@ -308,5 +325,177 @@ client.command("cooldown 0")
 client.command("chance 0")
 check(client.env.DruidenRP_CharacterDB.textChance == 0, "chance minimum accepted")
 client.command("chance 100")
+
+-- Separate faction voices and target-safe newly added actions.
+local catalogKeys = {
+"STARFIRE","INSECT_SWARM","HURRICANE","FAERIE_FIRE","FAERIE_FIRE_FERAL",
+"ECLIPSE","WILD_GROWTH","BLOOM","PRIMAL_BITE","LACERATE","REVIVE",
+"SWIFTMEND","NATURES_SWIFTNESS","OMEN_OF_CLARITY","SOOTHE_ANIMAL",
+"HIBERNATE","REMOVE_CURSE","CURE_POISON","ABOLISH_POISON","POUNCE",
+"SHRED","RAKE","RIP","FEROCIOUS_BITE","CLAW","MAUL","SWIPE","BASH",
+"GROWL","ENRAGE","DASH","PROWL","FRENZIED_REGENERATION",
+"CHALLENGING_ROAR","FERAL_CHARGE","DEMORALIZING_ROAR","SHAPE_SHIFT",
+"REJUVENATING_BLOOM"}
+check(#catalogKeys == 38, "38 new druid action keys")
+local expectedTargetModes = {
+    STARFIRE="enemy", INSECT_SWARM="enemy", HURRICANE="self",
+    FAERIE_FIRE="enemy", FAERIE_FIRE_FERAL="enemy", ECLIPSE="self",
+    WILD_GROWTH="self", BLOOM="friend", PRIMAL_BITE="enemy",
+    LACERATE="enemy", REVIVE="friend", SWIFTMEND="friend",
+    NATURES_SWIFTNESS="self", OMEN_OF_CLARITY="self", SOOTHE_ANIMAL="enemy",
+    HIBERNATE="enemy", REMOVE_CURSE="friend", CURE_POISON="friend",
+    ABOLISH_POISON="friend", POUNCE="enemy", SHRED="enemy", RAKE="enemy",
+    RIP="enemy", FEROCIOUS_BITE="enemy", CLAW="enemy", MAUL="enemy",
+    SWIPE="self", BASH="enemy", GROWL="enemy", ENRAGE="self", DASH="self",
+    PROWL="self", FRENZIED_REGENERATION="self", CHALLENGING_ROAR="self",
+    FERAL_CHARGE="enemy", DEMORALIZING_ROAR="self", SHAPE_SHIFT="self",
+    REJUVENATING_BLOOM="friend",
+}
+local targetCases = {
+    { name="friend", target="FRIEND_TARGET%1", hostile=false },
+    { name="enemy", target="ENEMY_TARGET%1", hostile=true },
+    { name="absent", hostile=false },
+}
+for _, lang in ipairs({"deDE","enUS","frFR"}) do
+    local druid = newClient({race="NightElf"})
+    druid.command("language " .. lang)
+    for _, key in ipairs(catalogKeys) do
+        local pool = druid.addon.localeData[lang].texts[key]
+        check(type(pool) == "table" and type(pool.gruppe) == "table"
+            and #pool.gruppe >= 4, lang .. " has original lines for " .. key)
+        local dialogueCount, emoteCount, seen = 0, 0, {}
+        for _, line in ipairs(pool.gruppe) do
+            check(type(line) == "string" and line ~= "" and not seen[line],
+                lang .. " " .. key .. " has nonempty distinct generic lines")
+            seen[line] = true
+            if line:sub(1, 1) == "*" and line:sub(-1) == "*" then
+                emoteCount = emoteCount + 1
+            else
+                dialogueCount = dialogueCount + 1
+            end
+        end
+        check(dialogueCount >= 2 and emoteCount >= 2,
+            lang .. " " .. key .. " has two dialogue and two emote lines")
+        check(type(druid.addon.BuildText(key)) == "string",
+            lang .. " builds targetless " .. key)
+        local mode = expectedTargetModes[key]
+        check(mode ~= nil, key .. " has independently specified target expectations")
+        for _, targetCase in ipairs(targetCases) do
+            druid.target, druid.hostile = targetCase.target, targetCase.hostile
+            local text = druid.addon.BuildText(key)
+            check(type(text) == "string" and not text:find("%s", 1, true),
+                lang .. " " .. key .. " " .. targetCase.name .. " resolves placeholders")
+            local shouldNameTarget = mode == targetCase.name
+            if shouldNameTarget then
+                check(text:find(targetCase.target, 1, true) ~= nil,
+                    lang .. " " .. key .. " names a suitable " .. targetCase.name)
+            else
+                check(text == pool.gruppe[1],
+                    lang .. " " .. key .. " uses generic text for " .. targetCase.name)
+            end
+        end
+        -- Self-only pools have no authored target lines; a probe makes a
+        -- classification regression observable instead of passing by accident.
+        if mode == "self" then
+            local originalTargetPool = pool.ziel
+            pool.ziel = { "TARGET_PROBE %s" }
+            for _, targetCase in ipairs(targetCases) do
+                druid.target, druid.hostile = targetCase.target, targetCase.hostile
+                check(druid.addon.BuildText(key) == pool.gruppe[1],
+                    lang .. " " .. key .. " ignores target probe for " .. targetCase.name)
+            end
+            pool.ziel = originalTargetPool
+        end
+        druid.target, druid.hostile = nil, false
+    end
+    local racial = druid.addon.localeData[lang].racial
+    for _, name in ipairs({"SkyborneHighOrder", "SkyborneWindshaper"}) do
+        check(type(racial[name]) == "table", lang .. " has " .. name .. " voice")
+        check(type(racial[name].MARK) == "table", lang .. " skyborne MARK")
+    end
+    for _, variant in ipairs({
+        { name = "SkyborneHighOrder", raceId = 95, faction = "Alliance" },
+        { name = "SkyborneWindshaper", raceId = 96, faction = "Horde" },
+    }) do
+        local skyborne = newClient({
+            race = "Skyborne", raceId = variant.raceId, faction = variant.faction,
+        })
+        skyborne.command("language " .. lang)
+        skyborne.target = "STARFIRE_TARGET"
+        skyborne.hostile = true
+        local text = skyborne.addon.BuildText("STARFIRE")
+        local expected = skyborne.addon.localeData[lang].racial[variant.name]
+            .STARFIRE.ziel[1]:gsub("%%s", skyborne.target)
+        check(text == expected,
+            lang .. " " .. variant.name .. " STARFIRE uses targeted localized text")
+    end
+end
+for _, case in ipairs({
+    { faction="Alliance", expected="SkyborneHighOrder" },
+    { faction="Horde", expected="SkyborneWindshaper" },
+    { expected="Skyborne" },
+    { faction="Neutral", expected="Skyborne" },
+    { raceId=95, faction="Horde", expected="SkyborneHighOrder" },
+    { raceId=96, faction="Alliance", expected="SkyborneWindshaper" },
+    { race="NightElf", localizedRace="Himmelsgeborene", faction="Alliance",
+        expected="SkyborneHighOrder" },
+}) do
+    local skyborne = newClient({
+        race=case.race or "Skyborne", raceId=case.raceId, faction=case.faction,
+        localizedRace=case.localizedRace,
+    })
+    check(skyborne.addon.GetPlayerRaceToken() == case.expected,
+        "Skyborne compatibility detection: " .. case.expected)
+end
+local oldSkyborne = newClient({ race="Skyborne" })
+oldSkyborne.env.UnitFactionGroup = nil
+check(oldSkyborne.addon.GetPlayerRaceToken() == "Skyborne",
+    "Skyborne remains neutral when race ID and faction API are absent")
+local targets = newClient({race="Tauren"})
+targets.target = "FRIEND_SENTINEL_9"
+targets.hostile = false
+check(not targets.addon.BuildText("STARFIRE"):find(targets.target, 1, true),
+    "starfire never calls a friend hostile")
+check(targets.addon.BuildText("REVIVE"):find(targets.target, 1, true),
+    "revive addresses a friend")
+targets.target = "HOSTILE_SENTINEL_4"
+targets.hostile = true
+check(targets.addon.BuildText("STARFIRE"):find(targets.target, 1, true),
+    "starfire addresses hostile target")
+check(not targets.addon.BuildText("REVIVE"):find(targets.target, 1, true),
+    "revive never addresses hostile target")
+check(not targets.addon.BuildText("ECLIPSE"):find(targets.target, 1, true),
+    "self action has no hostile target name")
+local special = newClient({race="Skyborne",raceId=95,faction="Alliance"})
+check(special.addon.GetPlayerRaceToken() == "SkyborneHighOrder",
+    "Alliance Skyborne recognized")
+check(special.addon.BuildText("NATURES_GRASP"):find("Wind lockt", 1, true),
+    "high-order variant falls back to neutral Skyborne action pool")
+check(special.addon.BuildAmbient("BALANCE")
+    == special.addon.localeData.deDE.ambientRacial.Skyborne.BALANCE[1],
+    "high-order variant falls back to neutral Skyborne ambient pool")
+special.command("list racial")
+local listedInheritedKeys = {}
+for _, notice in ipairs(special.notices) do
+    local message = notice:match("|r (.+)$")
+    if message then listedInheritedKeys[message] = true end
+end
+check(listedInheritedKeys.NATURES_GRASP and listedInheritedKeys.REBIRTH,
+    "high-order racial list includes inherited Skyborne keys")
+check(special.addon.SendText("variant speech"), "high-order Skyborne speech sent")
+check(special.messages[1].language == 2, "high-order variant uses Skyborne language")
+special = newClient({race="Skyborne",raceId=96,faction="Horde"})
+check(special.addon.GetPlayerRaceToken() == "SkyborneWindshaper",
+    "Horde Skyborne recognized")
+check(special.addon.BuildText("NATURES_GRASP"):find("Wind lockt", 1, true),
+    "windshaper variant falls back to neutral Skyborne action pool")
+check(special.addon.BuildAmbient("BALANCE")
+    == special.addon.localeData.deDE.ambientRacial.Skyborne.BALANCE[1],
+    "windshaper variant falls back to neutral Skyborne ambient pool")
+check(special.addon.SendText("variant speech"), "windshaper Skyborne speech sent")
+check(special.messages[1].language == 2, "windshaper variant uses Skyborne language")
+local saved = newClient({db={personalTexts={STARFIRE={"Mein eigener Stern."}}}})
+check(saved.addon.BuildText("STARFIRE") == "Mein eigener Stern.",
+    "personal druid texts remain untouched")
 
 print("PASS: " .. checks .. " checks")

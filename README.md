@@ -5,6 +5,27 @@ PaladinRP (Hannes Weichselbaum; Code MPL-2.0, RP-Texte CC BY-SA 4.0).
 PaladinRP wird weder verändert noch als Abhängigkeit benötigt. Die Texte
 sind neu für Druiden geschrieben.
 
+## Ausbau 0.4.0: Zauber, Gestalten und Völker
+
+Weitere **38 eigenständig verfasste Aktionstextpools** in DE/EN/FR;
+zusammen mit dem bisherigen Bestand gibt es nun 59 allgemeine
+RP-Schlüssel. Dazu gehören Mond- und Sternenzauber, Heilung,
+Entgiftung, Gestaltwechsel sowie Katzen- und Bärenaktionen.
+Die Schlüssel sind Textaktionen und behaupten keine Verfügbarkeit
+eines Zaubers auf der aktuellen Stufe.
+
+Beispiele: `/drp STARFIRE`, `/drp WILD_GROWTH`,
+`/drp REVIVE`, `/drp POUNCE`, `/drp FRENZIED_REGENERATION`.
+Die neuen `ziel`-Texte dürfen nur ein passendes freundliches oder
+feindliches Ziel nennen. Ohne geeignetes Ziel wird ein allgemeiner
+`gruppe`-Text gewählt. Alte persönliche Texte bleiben unverändert.
+
+Bei den Himmelsgeborenen gibt es jetzt zwei getrennte Volksstimmen:
+`SkyborneHighOrder` (Allianz) und `SkyborneWindshaper` (Horde).
+Erkennung über die Rassen-ID (95 bzw. 96), ersatzweise über die
+Fraktion; ein neutraler `Skyborne`-Fallback bleibt erhalten.
+Vorhandene Nachtelfen- und Taurentexte werden nicht ersetzt.
+
 ## Beschreibung
 
 Zufällige Rollenspieltexte für Druidenzauber und Gestalten, mit eigenen
@@ -244,7 +265,7 @@ Kanalwahl, Textgrenzen und Cooldown.
 
 ## Kompatibilität
 
-Die TOC deklariert Interface `16001` und Version `0.3.1`. Im Spiel zeigt
+Die TOC deklariert Interface `16001` und Version `0.4.0`. Im Spiel zeigt
 `/dump select(4, GetBuildInfo())` die benötigte Interface-Version.
 Die TOC-Version ist keine Zusage für jeden Classic- oder Beta-Build.
 Erforderlich ist `C_ChatInfo.SendChatMessage`; ein Client mit ausschließlich

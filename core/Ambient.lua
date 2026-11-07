@@ -19,9 +19,15 @@ end
 function addon.BuildAmbient(category)
     local lang = addon.GetOutputLanguage()
     local race = addon.GetPlayerRaceToken and addon.GetPlayerRaceToken() or select(2, UnitRace("player"))
+    local baseRace
+    if race == "SkyborneHighOrder" or race == "SkyborneWindshaper" then
+        baseRace = "Skyborne"
+    end
     local pool = addon.GetLocalePoolExact(lang, "ambientRacial", race, category)
+        or (baseRace and addon.GetLocalePoolExact(lang, "ambientRacial", baseRace, category))
         or addon.GetLocalePoolExact(lang, "ambient", category)
         or addon.GetLocalePoolExact("deDE", "ambientRacial", race, category)
+        or (baseRace and addon.GetLocalePoolExact("deDE", "ambientRacial", baseRace, category))
         or addon.GetLocalePoolExact("deDE", "ambient", category)
     if not pool or #pool == 0 then return nil end
     local eligible = {}

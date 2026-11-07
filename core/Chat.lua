@@ -12,7 +12,8 @@ addon.channels = {
     PARTY = true, RAID = true, INSTANCE_CHAT = true,
 }
 local racialLanguageIDs = {
-    NightElf = 2, Skyborne = 2, Tauren = 3, Troll = 14, Worgen = 7,
+    NightElf = 2, Skyborne = 2, SkyborneHighOrder = 2, SkyborneWindshaper = 2,
+    Tauren = 3, Troll = 14, Worgen = 7,
 }
 
 function addon.GetChatChannel()

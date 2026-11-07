@@ -36,6 +36,9 @@ local function ShowDynamicList(mode, kind)
             for raceKey, values in pairs(pool) do Flat(values, source .. ":" .. raceKey) end
         else
             Flat(pool[race], source .. ":" .. tostring(race))
+            if race == "SkyborneHighOrder" or race == "SkyborneWindshaper" then
+                Flat(pool.Skyborne, source .. ":Skyborne")
+            end
         end
     end
     local function Class(pool, source)

@@ -24,6 +24,16 @@ function addon.GetPlayerRaceToken()
     end
 
     if IsSkyborne(localizedRace) or IsSkyborne(raceToken) then
+        -- Separate the two Forever Skyborne factions, preserving the neutral
+        -- fallback for older clients that provide neither ID nor faction.
+        local raceId = select(3, UnitRace("player"))
+        if raceId == 95 then return "SkyborneHighOrder" end
+        if raceId == 96 then return "SkyborneWindshaper" end
+        if type(UnitFactionGroup) == "function" then
+            local faction = UnitFactionGroup("player")
+            if faction == "Alliance" then return "SkyborneHighOrder" end
+            if faction == "Horde" then return "SkyborneWindshaper" end
+        end
         return "Skyborne"
     end
     if raceToken == "Scourge" then
