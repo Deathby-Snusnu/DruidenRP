@@ -3,7 +3,14 @@
 Aenderungen an DruidenRP. Eine nicht belegte Release-Historie wird nicht
 rekonstruiert.
 
-## Aktueller Quellstand: 0.3.1 (unveroeffentlicht)
+## Aktueller Quellstand: 0.4.0 (unveröffentlicht)
+
+- 38 neue, einzeln verfasste Aktionstextpools für Druidenzauber und Gestalten in DE/EN/FR; insgesamt 59 allgemeine RP-Schlüssel.
+- Hohe Ordnung und Windformer erhalten unterschiedliche Himmelsgeborenen-Textvarianten mit neutralem Fallback.
+- Neue gerichtete Zauber nutzen expliziten Freund/Feind/Selbst-Zielschutz. Bestehende persönliche Texte und klassische Schlüssel bleiben erhalten.
+- Lua-Regressionstests für neue Texte, Zielnamen, Rassen, Sprachen und persönlichen Bestandsschutz.
+
+## Historischer Quellstand: 0.3.1 (unveröffentlicht)
 
 - Versionsangabe aktualisiert und gemeinsame Dokumentationslinks fuer
   einzelne AddOn-Checkouts erlaeutert.

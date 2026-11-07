@@ -16,6 +16,8 @@ local function newClient(options)
     local state = {
         time = 0, messages = {}, notices = {},
         race = options.race or "NightElf",
+        raceId = options.raceId, faction = options.faction,
+        hostile = options.hostile or false,
         class = options.class or "DRUID",
         target = nil, group = false, raid = false, instance = false,
     }
@@ -31,7 +33,10 @@ local function newClient(options)
     env.print = function(text) state.notices[#state.notices + 1] = text end
     env.GetTime = function() return state.time end
     env.UnitClass = function() return "class", state.class end
-    env.UnitRace = function() return "race", state.race end
+    env.UnitRace = function() return "race", state.race, state.raceId end
+    env.UnitFactionGroup = function() return state.faction end
+    env.UnitCanAttack = function() return state.target ~= nil and state.hostile end
+    env.UnitCanAssist = function() return state.target ~= nil and not state.hostile end
     env.UnitExists = function() return state.target ~= nil end
     env.UnitName = function() return state.target end
     env.IsInGroup = function(category)
@@ -308,5 +313,57 @@ client.command("cooldown 0")
 client.command("chance 0")
 check(client.env.DruidenRP_CharacterDB.textChance == 0, "chance minimum accepted")
 client.command("chance 100")
+
+-- Separate faction voices and target-safe newly added actions.
+local catalogKeys = {
+"STARFIRE","INSECT_SWARM","HURRICANE","FAERIE_FIRE","FAERIE_FIRE_FERAL",
+"ECLIPSE","WILD_GROWTH","BLOOM","PRIMAL_BITE","LACERATE","REVIVE",
+"SWIFTMEND","NATURES_SWIFTNESS","OMEN_OF_CLARITY","SOOTHE_ANIMAL",
+"HIBERNATE","REMOVE_CURSE","CURE_POISON","ABOLISH_POISON","POUNCE",
+"SHRED","RAKE","RIP","FEROCIOUS_BITE","CLAW","MAUL","SWIPE","BASH",
+"GROWL","ENRAGE","DASH","PROWL","FRENZIED_REGENERATION",
+"CHALLENGING_ROAR","FERAL_CHARGE","DEMORALIZING_ROAR","SHAPE_SHIFT",
+"REJUVENATING_BLOOM"}
+check(#catalogKeys == 38, "38 new druid action keys")
+for _, lang in ipairs({"deDE","enUS","frFR"}) do
+    local druid = newClient({race="NightElf"})
+    druid.command("language " .. lang)
+    for _, key in ipairs(catalogKeys) do
+        local pool = druid.addon.localeData[lang].texts[key]
+        check(type(pool) == "table" and type(pool.gruppe) == "table"
+            and #pool.gruppe >= 4, lang .. " has original lines for " .. key)
+        check(type(druid.addon.BuildText(key)) == "string",
+            lang .. " builds targetless " .. key)
+    end
+    local racial = druid.addon.localeData[lang].racial
+    for _, name in ipairs({"SkyborneHighOrder", "SkyborneWindshaper"}) do
+        check(type(racial[name]) == "table", lang .. " has " .. name .. " voice")
+        check(type(racial[name].MARK) == "table", lang .. " skyborne MARK")
+    end
+end
+local targets = newClient({race="Tauren"})
+targets.target = "FRIEND_SENTINEL_9"
+targets.hostile = false
+check(not targets.addon.BuildText("STARFIRE"):find(targets.target, 1, true),
+    "starfire never calls a friend hostile")
+check(targets.addon.BuildText("REVIVE"):find(targets.target, 1, true),
+    "revive addresses a friend")
+targets.target = "HOSTILE_SENTINEL_4"
+targets.hostile = true
+check(targets.addon.BuildText("STARFIRE"):find(targets.target, 1, true),
+    "starfire addresses hostile target")
+check(not targets.addon.BuildText("REVIVE"):find(targets.target, 1, true),
+    "revive never addresses hostile target")
+check(not targets.addon.BuildText("ECLIPSE"):find(targets.target, 1, true),
+    "self action has no hostile target name")
+local special = newClient({race="Skyborne",raceId=95,faction="Alliance"})
+check(special.addon.GetPlayerRaceToken() == "SkyborneHighOrder",
+    "Alliance Skyborne recognized")
+special = newClient({race="Skyborne",raceId=96,faction="Horde"})
+check(special.addon.GetPlayerRaceToken() == "SkyborneWindshaper",
+    "Horde Skyborne recognized")
+local saved = newClient({db={personalTexts={STARFIRE={"Mein eigener Stern."}}}})
+check(saved.addon.BuildText("STARFIRE") == "Mein eigener Stern.",
+    "personal druid texts remain untouched")
 
 print("PASS: " .. checks .. " checks")
