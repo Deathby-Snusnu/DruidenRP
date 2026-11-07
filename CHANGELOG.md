@@ -8,7 +8,7 @@ rekonstruiert.
 - 38 neue, einzeln verfasste Aktionstextpools für Druidenzauber und Gestalten in DE/EN/FR; insgesamt 59 allgemeine RP-Schlüssel.
 - Hohe Ordnung und Windformer erhalten unterschiedliche Himmelsgeborenen-Textvarianten mit neutralem Fallback.
 - Neue gerichtete Zauber nutzen expliziten Freund/Feind/Selbst-Zielschutz. Bestehende persönliche Texte und klassische Schlüssel bleiben erhalten.
-- Lua-Regressionstests für neue Texte, Zielnamen, Rassen, Sprachen und persönlichen Bestandsschutz.
+- Lua-Regressionstests für alle 38 neuen Zielregeln mit freundlichen, feindlichen und fehlenden Zielen in DE/EN/FR, getrennte Dialog-/Emote-Prüfungen, Skyborne-Fraktionsfallbacks und persönlichen Bestandsschutz.
 
 ## Historischer Quellstand: 0.3.1 (unveröffentlicht)
 

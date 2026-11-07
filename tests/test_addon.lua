@@ -38,7 +38,7 @@ local function newClient(options)
     env.GetTime = function() return state.time end
     env.UnitAffectingCombat = function() return options.combat == true end
     env.UnitClass = function() return "class", state.class end
-    env.UnitRace = function() return "race", state.race, state.raceId end
+    env.UnitRace = function() return options.localizedRace or "race", state.race, state.raceId end
     env.UnitFactionGroup = function() return state.faction end
     env.UnitCanAttack = function() return state.target ~= nil and state.hostile end
     env.UnitCanAssist = function() return state.target ~= nil and not state.hostile end
@@ -337,6 +337,25 @@ local catalogKeys = {
 "CHALLENGING_ROAR","FERAL_CHARGE","DEMORALIZING_ROAR","SHAPE_SHIFT",
 "REJUVENATING_BLOOM"}
 check(#catalogKeys == 38, "38 new druid action keys")
+local expectedTargetModes = {
+    STARFIRE="enemy", INSECT_SWARM="enemy", HURRICANE="self",
+    FAERIE_FIRE="enemy", FAERIE_FIRE_FERAL="enemy", ECLIPSE="self",
+    WILD_GROWTH="self", BLOOM="friend", PRIMAL_BITE="enemy",
+    LACERATE="enemy", REVIVE="friend", SWIFTMEND="friend",
+    NATURES_SWIFTNESS="self", OMEN_OF_CLARITY="self", SOOTHE_ANIMAL="enemy",
+    HIBERNATE="enemy", REMOVE_CURSE="friend", CURE_POISON="friend",
+    ABOLISH_POISON="friend", POUNCE="enemy", SHRED="enemy", RAKE="enemy",
+    RIP="enemy", FEROCIOUS_BITE="enemy", CLAW="enemy", MAUL="enemy",
+    SWIPE="self", BASH="enemy", GROWL="enemy", ENRAGE="self", DASH="self",
+    PROWL="self", FRENZIED_REGENERATION="self", CHALLENGING_ROAR="self",
+    FERAL_CHARGE="enemy", DEMORALIZING_ROAR="self", SHAPE_SHIFT="self",
+    REJUVENATING_BLOOM="friend",
+}
+local targetCases = {
+    { name="friend", target="FRIEND_TARGET%1", hostile=false },
+    { name="enemy", target="ENEMY_TARGET%1", hostile=true },
+    { name="absent", hostile=false },
+}
 for _, lang in ipairs({"deDE","enUS","frFR"}) do
     local druid = newClient({race="NightElf"})
     druid.command("language " .. lang)
@@ -344,8 +363,50 @@ for _, lang in ipairs({"deDE","enUS","frFR"}) do
         local pool = druid.addon.localeData[lang].texts[key]
         check(type(pool) == "table" and type(pool.gruppe) == "table"
             and #pool.gruppe >= 4, lang .. " has original lines for " .. key)
+        local dialogueCount, emoteCount, seen = 0, 0, {}
+        for _, line in ipairs(pool.gruppe) do
+            check(type(line) == "string" and line ~= "" and not seen[line],
+                lang .. " " .. key .. " has nonempty distinct generic lines")
+            seen[line] = true
+            if line:sub(1, 1) == "*" and line:sub(-1) == "*" then
+                emoteCount = emoteCount + 1
+            else
+                dialogueCount = dialogueCount + 1
+            end
+        end
+        check(dialogueCount >= 2 and emoteCount >= 2,
+            lang .. " " .. key .. " has two dialogue and two emote lines")
         check(type(druid.addon.BuildText(key)) == "string",
             lang .. " builds targetless " .. key)
+        local mode = expectedTargetModes[key]
+        check(mode ~= nil, key .. " has independently specified target expectations")
+        for _, targetCase in ipairs(targetCases) do
+            druid.target, druid.hostile = targetCase.target, targetCase.hostile
+            local text = druid.addon.BuildText(key)
+            check(type(text) == "string" and not text:find("%s", 1, true),
+                lang .. " " .. key .. " " .. targetCase.name .. " resolves placeholders")
+            local shouldNameTarget = mode == targetCase.name
+            if shouldNameTarget then
+                check(text:find(targetCase.target, 1, true) ~= nil,
+                    lang .. " " .. key .. " names a suitable " .. targetCase.name)
+            else
+                check(text == pool.gruppe[1],
+                    lang .. " " .. key .. " uses generic text for " .. targetCase.name)
+            end
+        end
+        -- Self-only pools have no authored target lines; a probe makes a
+        -- classification regression observable instead of passing by accident.
+        if mode == "self" then
+            local originalTargetPool = pool.ziel
+            pool.ziel = { "TARGET_PROBE %s" }
+            for _, targetCase in ipairs(targetCases) do
+                druid.target, druid.hostile = targetCase.target, targetCase.hostile
+                check(druid.addon.BuildText(key) == pool.gruppe[1],
+                    lang .. " " .. key .. " ignores target probe for " .. targetCase.name)
+            end
+            pool.ziel = originalTargetPool
+        end
+        druid.target, druid.hostile = nil, false
     end
     local racial = druid.addon.localeData[lang].racial
     for _, name in ipairs({"SkyborneHighOrder", "SkyborneWindshaper"}) do
@@ -369,6 +430,27 @@ for _, lang in ipairs({"deDE","enUS","frFR"}) do
             lang .. " " .. variant.name .. " STARFIRE uses targeted localized text")
     end
 end
+for _, case in ipairs({
+    { faction="Alliance", expected="SkyborneHighOrder" },
+    { faction="Horde", expected="SkyborneWindshaper" },
+    { expected="Skyborne" },
+    { faction="Neutral", expected="Skyborne" },
+    { raceId=95, faction="Horde", expected="SkyborneHighOrder" },
+    { raceId=96, faction="Alliance", expected="SkyborneWindshaper" },
+    { race="NightElf", localizedRace="Himmelsgeborene", faction="Alliance",
+        expected="SkyborneHighOrder" },
+}) do
+    local skyborne = newClient({
+        race=case.race or "Skyborne", raceId=case.raceId, faction=case.faction,
+        localizedRace=case.localizedRace,
+    })
+    check(skyborne.addon.GetPlayerRaceToken() == case.expected,
+        "Skyborne compatibility detection: " .. case.expected)
+end
+local oldSkyborne = newClient({ race="Skyborne" })
+oldSkyborne.env.UnitFactionGroup = nil
+check(oldSkyborne.addon.GetPlayerRaceToken() == "Skyborne",
+    "Skyborne remains neutral when race ID and faction API are absent")
 local targets = newClient({race="Tauren"})
 targets.target = "FRIEND_SENTINEL_9"
 targets.hostile = false
