@@ -202,7 +202,7 @@ db.personalTexts.MARK = { "Eigener Text fuer %s." }
 check(client.addon.TryText("MARK"), "personal pool priority")
 check(client.messages[#client.messages].text == "Eigener Text fuer Ziel%1.", "personal replacement")
 client.target = nil
-check(not client.addon.TryText("MARK"), "target-only personal pool without target")
+check(client.addon.TryText("MARK"), "unusable personal target-only pool falls back to safe general text")
 db.personalTexts.MARK = { ziel = { "Hallo %s." }, gruppe = { "Hallo Wald." } }
 check(client.addon.TryText("MARK"), "personal generic fallback")
 check(client.messages[#client.messages].text == "Hallo Wald.", "personal generic content")
