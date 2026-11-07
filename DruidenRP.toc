@@ -2,7 +2,7 @@
 ## Title: Druiden RP
 ## Notes: Rollenspieltexte fuer Druiden, abgeleitet von PaladinRP
 ## Author: Hannes; DruidenRP adaptation
-## Version: 0.3.1
+## Version: 0.4.0
 ## SavedVariablesPerCharacter: DruidenRP_CharacterDB
 ## OptionalDeps: RPChatMod
 
@@ -10,16 +10,19 @@ config\Settings.lua
 locales\Init.lua
 locales\deDE\Texts.lua
 locales\deDE\Racial.lua
+locales\deDE\Skyborne.lua
 locales\deDE\Ambient.lua
 locales\deDE\AmbientRacial.lua
 locales\deDE\Expansion.lua
 locales\enUS\Texts.lua
 locales\enUS\Racial.lua
+locales\enUS\Skyborne.lua
 locales\enUS\Ambient.lua
 locales\enUS\AmbientRacial.lua
 locales\enUS\Expansion.lua
 locales\frFR\Texts.lua
 locales\frFR\Racial.lua
+locales\frFR\Skyborne.lua
 locales\frFR\Ambient.lua
 locales\frFR\AmbientRacial.lua
 locales\frFR\Expansion.lua

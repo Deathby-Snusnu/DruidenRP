@@ -47,7 +47,60 @@ local function FriendlyTargetName()
     if UnitExists("target") and UnitCanAssist("player", "target") then return UnitName("target") end
 end
 
+-- Newly added actions use explicit target categories; older keys keep
+-- their existing behavior and personal text overrides.
+local ACTION_TARGET_MODES = {
+    HURRICANE = "S",
+    ECLIPSE = "S",
+    WILD_GROWTH = "S",
+    NATURES_SWIFTNESS = "S",
+    OMEN_OF_CLARITY = "S",
+    SWIPE = "S",
+    ENRAGE = "S",
+    DASH = "S",
+    PROWL = "S",
+    FRENZIED_REGENERATION = "S",
+    CHALLENGING_ROAR = "S",
+    DEMORALIZING_ROAR = "S",
+    SHAPE_SHIFT = "S",
+    BLOOM = "F",
+    REVIVE = "F",
+    SWIFTMEND = "F",
+    REMOVE_CURSE = "F",
+    CURE_POISON = "F",
+    ABOLISH_POISON = "F",
+    REJUVENATING_BLOOM = "F",
+    STARFIRE = "E",
+    INSECT_SWARM = "E",
+    FAERIE_FIRE = "E",
+    FAERIE_FIRE_FERAL = "E",
+    PRIMAL_BITE = "E",
+    LACERATE = "E",
+    SOOTHE_ANIMAL = "E",
+    HIBERNATE = "E",
+    POUNCE = "E",
+    SHRED = "E",
+    RAKE = "E",
+    RIP = "E",
+    FEROCIOUS_BITE = "E",
+    CLAW = "E",
+    MAUL = "E",
+    BASH = "E",
+    GROWL = "E",
+    FERAL_CHARGE = "E",
+}
+
 local function ResolveTargetName(key)
+    local mode = ACTION_TARGET_MODES[key]
+    if mode == "S" then return nil end
+    if mode == "F" then return FriendlyTargetName() end
+    if mode == "E" then
+        if UnitExists("target") and type(UnitCanAttack) == "function"
+            and UnitCanAttack("player", "target") then
+            return UnitName("target")
+        end
+        return nil
+    end
     if SELF_ONLY[key] then return nil end
     if FRIENDLY_OR_SELF[key] then return FriendlyTargetName() or UnitName("player") end
     if FRIENDLY_ONLY[key] then return FriendlyTargetName() end
