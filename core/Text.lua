@@ -107,14 +107,21 @@ local function ResolveTargetName(key)
     if UnitExists("target") then return UnitName("target") end
 end
 
+local function ResolvePersonalTargetName(key)
+    if SELF_ONLY[key] then return nil end
+    if FRIENDLY_OR_SELF[key] then return FriendlyTargetName() or UnitName("player") end
+    if FRIENDLY_ONLY[key] then return FriendlyTargetName() end
+    if UnitExists("target") then return UnitName("target") end
+end
+
 function addon.BuildText(key)
-    local targetName = ResolveTargetName(key)
     local personal = addon.db.personalTexts[key]
     if personal then
-        local text = ChooseText(personal, targetName)
+        local text = ChooseText(personal, ResolvePersonalTargetName(key))
         if text then return text end
     end
 
+    local targetName = ResolveTargetName(key)
     local race = addon.GetPlayerRaceToken()
     local lang = addon.GetOutputLanguage()
     local baseRace

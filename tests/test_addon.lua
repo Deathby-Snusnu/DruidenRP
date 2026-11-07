@@ -215,6 +215,11 @@ check(not client.addon.TryText("MARK"), "chat markup rejected")
 db.personalTexts.MARK = { string.rep("x", 255) }
 check(client.addon.TryText("MARK"), "255 byte boundary accepted")
 db.personalTexts.MARK = nil
+client.target = "HOSTILE_PERSONAL_SENTINEL"
+db.personalTexts.DASH = { "Mein Dash-Text fuer %s." }
+check(client.addon.BuildText("DASH") == "Mein Dash-Text fuer HOSTILE_PERSONAL_SENTINEL.",
+    "personal DASH text retains legacy target resolution")
+db.personalTexts.DASH = nil
 check(not client.addon.TryText("UNKNOWN"), "unknown key")
 
 local categories = 0
@@ -371,6 +376,14 @@ check(special.addon.BuildText("NATURES_GRASP"):find("Wind lockt", 1, true),
 check(special.addon.BuildAmbient("BALANCE")
     == special.addon.localeData.deDE.ambientRacial.Skyborne.BALANCE[1],
     "high-order variant falls back to neutral Skyborne ambient pool")
+special.command("list racial")
+local listedInheritedKeys = {}
+for _, notice in ipairs(special.notices) do
+    local message = notice:match("|r (.+)$")
+    if message then listedInheritedKeys[message] = true end
+end
+check(listedInheritedKeys.NATURES_GRASP and listedInheritedKeys.REBIRTH,
+    "high-order racial list includes inherited Skyborne keys")
 check(special.addon.SendText("variant speech"), "high-order Skyborne speech sent")
 check(special.messages[1].language == 2, "high-order variant uses Skyborne language")
 special = newClient({race="Skyborne",raceId=96,faction="Horde"})
