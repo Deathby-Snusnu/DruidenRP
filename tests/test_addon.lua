@@ -352,6 +352,22 @@ for _, lang in ipairs({"deDE","enUS","frFR"}) do
         check(type(racial[name]) == "table", lang .. " has " .. name .. " voice")
         check(type(racial[name].MARK) == "table", lang .. " skyborne MARK")
     end
+    for _, variant in ipairs({
+        { name = "SkyborneHighOrder", raceId = 95, faction = "Alliance" },
+        { name = "SkyborneWindshaper", raceId = 96, faction = "Horde" },
+    }) do
+        local skyborne = newClient({
+            race = "Skyborne", raceId = variant.raceId, faction = variant.faction,
+        })
+        skyborne.command("language " .. lang)
+        skyborne.target = "STARFIRE_TARGET"
+        skyborne.hostile = true
+        local text = skyborne.addon.BuildText("STARFIRE")
+        local expected = skyborne.addon.localeData[lang].racial[variant.name]
+            .STARFIRE.ziel[1]:gsub("%%s", skyborne.target)
+        check(text == expected,
+            lang .. " " .. variant.name .. " STARFIRE uses targeted localized text")
+    end
 end
 local targets = newClient({race="Tauren"})
 targets.target = "FRIEND_SENTINEL_9"
