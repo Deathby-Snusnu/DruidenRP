@@ -2,7 +2,7 @@ local files = {}
 for line in io.lines("DruidenRP.toc") do
     local file = line:match("^%s*(.-)%s*$")
     if file ~= "" and not file:find("^#") then
-        files[#files + 1] = file:gsub("/", "\\")
+        files[#files + 1] = file:gsub("\\", package.config:sub(1, 1))
     end
 end
 local checks = 0
