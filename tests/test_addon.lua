@@ -366,9 +366,23 @@ check(not targets.addon.BuildText("ECLIPSE"):find(targets.target, 1, true),
 local special = newClient({race="Skyborne",raceId=95,faction="Alliance"})
 check(special.addon.GetPlayerRaceToken() == "SkyborneHighOrder",
     "Alliance Skyborne recognized")
+check(special.addon.BuildText("NATURES_GRASP"):find("Wind lockt", 1, true),
+    "high-order variant falls back to neutral Skyborne action pool")
+check(special.addon.BuildAmbient("BALANCE")
+    == special.addon.localeData.deDE.ambientRacial.Skyborne.BALANCE[1],
+    "high-order variant falls back to neutral Skyborne ambient pool")
+check(special.addon.SendText("variant speech"), "high-order Skyborne speech sent")
+check(special.messages[1].language == 2, "high-order variant uses Skyborne language")
 special = newClient({race="Skyborne",raceId=96,faction="Horde"})
 check(special.addon.GetPlayerRaceToken() == "SkyborneWindshaper",
     "Horde Skyborne recognized")
+check(special.addon.BuildText("NATURES_GRASP"):find("Wind lockt", 1, true),
+    "windshaper variant falls back to neutral Skyborne action pool")
+check(special.addon.BuildAmbient("BALANCE")
+    == special.addon.localeData.deDE.ambientRacial.Skyborne.BALANCE[1],
+    "windshaper variant falls back to neutral Skyborne ambient pool")
+check(special.addon.SendText("variant speech"), "windshaper Skyborne speech sent")
+check(special.messages[1].language == 2, "windshaper variant uses Skyborne language")
 local saved = newClient({db={personalTexts={STARFIRE={"Mein eigener Stern."}}}})
 check(saved.addon.BuildText("STARFIRE") == "Mein eigener Stern.",
     "personal druid texts remain untouched")
