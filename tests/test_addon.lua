@@ -44,6 +44,11 @@ local function newClient(options)
     env.UnitCanAssist = function() return state.target ~= nil and not state.hostile end
     env.UnitExists = function() return state.target ~= nil end
     env.UnitName = function() return state.target end
+    if options.secretName then
+        env.issecretvalue = function(value) return value == options.secretName end
+    elseif options.noSecretAPI then
+        env.issecretvalue = false
+    end
     env.IsInGroup = function(category)
         if category then return state.instance end
         return state.group or state.raid or state.instance
@@ -466,6 +471,39 @@ check(not targets.addon.BuildText("REVIVE"):find(targets.target, 1, true),
     "revive never addresses hostile target")
 check(not targets.addon.BuildText("ECLIPSE"):find(targets.target, 1, true),
     "self action has no hostile target name")
+local secret = newClient({ secretName="SECRET_TARGET" })
+secret.target, secret.hostile = "SECRET_TARGET", true
+local localizedPlaceholders = {
+    deDE = "das Ziel",
+    enUS = "the target",
+    frFR = "la cible",
+}
+for lang, placeholder in pairs(localizedPlaceholders) do
+    secret.command("language " .. lang)
+    local pool = secret.addon.localeData[lang].texts.STARFIRE
+    check(secret.addon.BuildText("STARFIRE") == pool.ziel[1]:gsub("%%s", placeholder),
+        lang .. " built-in text localizes secret target")
+    secret.env.DruidenRP_CharacterDB.personalTexts.STARFIRE = { "Personal %s." }
+    check(secret.addon.BuildText("STARFIRE") == "Personal " .. placeholder .. ".",
+        lang .. " personal text localizes secret target")
+end
+secret.command("language enUS")
+secret.target = "ORDINARY_TARGET"
+check(secret.addon.BuildText("STARFIRE")
+    == secret.addon.localeData.enUS.texts.STARFIRE.ziel[1]:gsub("%%s", secret.target),
+    "ordinary built-in target name is preserved")
+check(secret.addon.BuildText("STARFIRE") == "Personal ORDINARY_TARGET.",
+    "ordinary personal target name is preserved")
+local noSecretAPI = newClient({ noSecretAPI=true })
+noSecretAPI.command("language enUS")
+noSecretAPI.target, noSecretAPI.hostile = "SECRET_TARGET", true
+noSecretAPI.env.DruidenRP_CharacterDB.personalTexts.STARFIRE = { "Personal %s." }
+check(type(noSecretAPI.env.issecretvalue) ~= "function", "client without secret API")
+check(noSecretAPI.addon.BuildText("STARFIRE")
+    == noSecretAPI.addon.localeData.enUS.texts.STARFIRE.ziel[1]:gsub("%%s", "SECRET_TARGET"),
+    "built-in target name is preserved without secret API")
+check(noSecretAPI.addon.BuildText("STARFIRE") == "Personal SECRET_TARGET.",
+    "personal target name is preserved without secret API")
 local special = newClient({race="Skyborne",raceId=95,faction="Alliance"})
 check(special.addon.GetPlayerRaceToken() == "SkyborneHighOrder",
     "Alliance Skyborne recognized")
