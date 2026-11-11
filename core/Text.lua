@@ -7,6 +7,23 @@
 
 local _, addon = ...
 
+-- Protected WoW clients may return secret strings for unit names.
+-- Use a safe placeholder before comparison or text interpolation.
+local function SafeUnitName(unit)
+    local name = UnitName(unit)
+    if type(issecretvalue) == "function" and issecretvalue(name) then
+        local names = {
+            deDE = { pet = "Euer Begleiter", player = "Ihr", target = "das Ziel" },
+            enUS = { pet = "your companion", player = "you", target = "the target" },
+            frFR = { pet = "votre compagnon", player = "vous", target = "la cible" },
+        }
+        local placeholders = names[addon.GetOutputLanguage()] or names.deDE
+        return placeholders[unit] or placeholders.target
+    end
+    return name
+end
+
+
 local SELF_ONLY = {
     TRANQUILITY=true, BARKSKIN=true, NATURES_GRASP=true,
     BEAR=true, CAT=true, TRAVEL=true, AQUATIC=true, MOONKIN=true, TREE=true, FLIGHT=true,
@@ -44,7 +61,7 @@ local function ChooseText(pool, targetName)
 end
 
 local function FriendlyTargetName()
-    if UnitExists("target") and UnitCanAssist("player", "target") then return UnitName("target") end
+    if UnitExists("target") and UnitCanAssist("player", "target") then return SafeUnitName("target") end
 end
 
 -- Newly added actions use explicit target categories; older keys keep
@@ -97,21 +114,21 @@ local function ResolveTargetName(key)
     if mode == "E" then
         if UnitExists("target") and type(UnitCanAttack) == "function"
             and UnitCanAttack("player", "target") then
-            return UnitName("target")
+            return SafeUnitName("target")
         end
         return nil
     end
     if SELF_ONLY[key] then return nil end
-    if FRIENDLY_OR_SELF[key] then return FriendlyTargetName() or UnitName("player") end
+    if FRIENDLY_OR_SELF[key] then return FriendlyTargetName() or SafeUnitName("player") end
     if FRIENDLY_ONLY[key] then return FriendlyTargetName() end
-    if UnitExists("target") then return UnitName("target") end
+    if UnitExists("target") then return SafeUnitName("target") end
 end
 
 local function ResolvePersonalTargetName(key)
     if SELF_ONLY[key] then return nil end
-    if FRIENDLY_OR_SELF[key] then return FriendlyTargetName() or UnitName("player") end
+    if FRIENDLY_OR_SELF[key] then return FriendlyTargetName() or SafeUnitName("player") end
     if FRIENDLY_ONLY[key] then return FriendlyTargetName() end
-    if UnitExists("target") then return UnitName("target") end
+    if UnitExists("target") then return SafeUnitName("target") end
 end
 
 function addon.BuildText(key)
