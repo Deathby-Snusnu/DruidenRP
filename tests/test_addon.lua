@@ -480,6 +480,7 @@ local localizedPlaceholders = {
 }
 for lang, placeholder in pairs(localizedPlaceholders) do
     secret.command("language " .. lang)
+    secret.env.DruidenRP_CharacterDB.personalTexts.STARFIRE = nil
     local pool = secret.addon.localeData[lang].texts.STARFIRE
     check(secret.addon.BuildText("STARFIRE") == pool.ziel[1]:gsub("%%s", placeholder),
         lang .. " built-in text localizes secret target")
@@ -489,19 +490,21 @@ for lang, placeholder in pairs(localizedPlaceholders) do
 end
 secret.command("language enUS")
 secret.target = "ORDINARY_TARGET"
+secret.env.DruidenRP_CharacterDB.personalTexts.STARFIRE = nil
 check(secret.addon.BuildText("STARFIRE")
     == secret.addon.localeData.enUS.texts.STARFIRE.ziel[1]:gsub("%%s", secret.target),
     "ordinary built-in target name is preserved")
+secret.env.DruidenRP_CharacterDB.personalTexts.STARFIRE = { "Personal %s." }
 check(secret.addon.BuildText("STARFIRE") == "Personal ORDINARY_TARGET.",
     "ordinary personal target name is preserved")
 local noSecretAPI = newClient({ noSecretAPI=true })
 noSecretAPI.command("language enUS")
 noSecretAPI.target, noSecretAPI.hostile = "SECRET_TARGET", true
-noSecretAPI.env.DruidenRP_CharacterDB.personalTexts.STARFIRE = { "Personal %s." }
 check(type(noSecretAPI.env.issecretvalue) ~= "function", "client without secret API")
 check(noSecretAPI.addon.BuildText("STARFIRE")
     == noSecretAPI.addon.localeData.enUS.texts.STARFIRE.ziel[1]:gsub("%%s", "SECRET_TARGET"),
     "built-in target name is preserved without secret API")
+noSecretAPI.env.DruidenRP_CharacterDB.personalTexts.STARFIRE = { "Personal %s." }
 check(noSecretAPI.addon.BuildText("STARFIRE") == "Personal SECRET_TARGET.",
     "personal target name is preserved without secret API")
 local special = newClient({race="Skyborne",raceId=95,faction="Alliance"})
