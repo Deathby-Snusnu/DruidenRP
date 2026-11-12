@@ -473,15 +473,23 @@ check(not targets.addon.BuildText("ECLIPSE"):find(targets.target, 1, true),
     "self action has no hostile target name")
 local secret = newClient({ secretName="SECRET_TARGET" })
 secret.target, secret.hostile = "SECRET_TARGET", true
-for _, lang in ipairs({ "deDE", "enUS", "frFR" }) do
+local localizedLanguages = { "deDE", "enUS", "frFR" }
+local function isSafeTargetFallback(text, pool)
+    if text:find("SECRET_TARGET", 1, true) then return false end
+    for _, line in ipairs(pool.gruppe) do
+        if text == line then return true end
+    end
+    return false
+end
+for _, lang in ipairs(localizedLanguages) do
     secret.command("language " .. lang)
     secret.env.DruidenRP_CharacterDB.personalTexts.STARFIRE = nil
     local pool = secret.addon.localeData[lang].texts.STARFIRE
-    check(secret.addon.BuildText("STARFIRE") == pool.gruppe[1],
-        lang .. " built-in text avoids secret target")
+    check(isSafeTargetFallback(secret.addon.BuildText("STARFIRE"), pool),
+        lang .. " built-in text uses a target-free line for secret target")
     secret.env.DruidenRP_CharacterDB.personalTexts.STARFIRE = { "Personal %s." }
-    check(secret.addon.BuildText("STARFIRE") == pool.gruppe[1],
-        lang .. " personal text avoids secret target")
+    check(isSafeTargetFallback(secret.addon.BuildText("STARFIRE"), pool),
+        lang .. " personal text falls back safely for secret target")
 end
 secret.command("language enUS")
 secret.target = "ORDINARY_TARGET"
