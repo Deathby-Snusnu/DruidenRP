@@ -8,7 +8,7 @@
 local _, addon = ...
 
 -- Protected WoW clients may return secret strings for unit names.
--- Use a safe placeholder before comparison or text interpolation.
+-- Return nil so text selection uses a target-free line.
 local function SafeUnitName(unit)
     local name = UnitName(unit)
     if type(issecretvalue) == "function" and issecretvalue(name) then

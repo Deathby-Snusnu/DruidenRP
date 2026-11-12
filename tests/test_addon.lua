@@ -473,20 +473,15 @@ check(not targets.addon.BuildText("ECLIPSE"):find(targets.target, 1, true),
     "self action has no hostile target name")
 local secret = newClient({ secretName="SECRET_TARGET" })
 secret.target, secret.hostile = "SECRET_TARGET", true
-local localizedPlaceholders = {
-    deDE = "das Ziel",
-    enUS = "the target",
-    frFR = "la cible",
-}
-for lang, placeholder in pairs(localizedPlaceholders) do
+for _, lang in ipairs({ "deDE", "enUS", "frFR" }) do
     secret.command("language " .. lang)
     secret.env.DruidenRP_CharacterDB.personalTexts.STARFIRE = nil
     local pool = secret.addon.localeData[lang].texts.STARFIRE
-    check(secret.addon.BuildText("STARFIRE") == pool.ziel[1]:gsub("%%s", placeholder),
-        lang .. " built-in text localizes secret target")
+    check(secret.addon.BuildText("STARFIRE") == pool.gruppe[1],
+        lang .. " built-in text avoids secret target")
     secret.env.DruidenRP_CharacterDB.personalTexts.STARFIRE = { "Personal %s." }
-    check(secret.addon.BuildText("STARFIRE") == "Personal " .. placeholder .. ".",
-        lang .. " personal text localizes secret target")
+    check(secret.addon.BuildText("STARFIRE") == pool.gruppe[1],
+        lang .. " personal text avoids secret target")
 end
 secret.command("language enUS")
 secret.target = "ORDINARY_TARGET"
