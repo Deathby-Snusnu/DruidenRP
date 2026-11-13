@@ -58,8 +58,8 @@ function addon.InitializeDatabase()
     end
     DruidenRP_CharacterDB = DruidenRP_CharacterDB or {}
     local db = DruidenRP_CharacterDB
-    for _, key in ipairs({ "textChance", "cooldown" }) do
-        local maximum = key == "textChance" and 100 or 3600
+    for _, key in ipairs({ "textChance", "racialTextChance", "cooldown" }) do
+        local maximum = (key == "textChance" or key == "racialTextChance") and 100 or 3600
         if db[key] ~= nil and not addon.ValidNumber(db[key], maximum) then
             addon.Notify("Ungueltiger Wert fuer " .. key .. "; Standardwert wird geladen.")
             db[key] = nil
