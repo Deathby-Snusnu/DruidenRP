@@ -185,3 +185,16 @@ addon.localeData.deDE.racial = {
         },
     },
 }
+
+-- Editorial expansion: night-elven memory, quiet action and restoration.
+local nightElf = addon.localeData.deDE.racial.NightElf
+for _, line in ipairs({
+    "Die ältesten Bäume versprechen keinen Schutz. Sie lehren uns, ihn selbst zu geben.",
+    "*streicht eine welke Blattspitze glatt und lässt sie im Wind davontragen.*",
+    "Der Wald verlangt keine Dankbarkeit. Nur, dass Ihr ihn nicht vergesst.",
+}) do table.insert(nightElf.MARK.gruppe, line) end
+for _, line in ipairs({
+    "Noch ist Eure Geschichte nicht zu Ende. Ich höre sie im Wind.",
+    "*kniet schweigend nieder und legt die offene Hand auf den feuchten Boden.*",
+    "Ein Samen kann Jahre ruhen, bevor er neues Grün zeigt. Auch Ihr dürft zurückkehren.",
+}) do table.insert(nightElf.REBIRTH.gruppe, line) end
