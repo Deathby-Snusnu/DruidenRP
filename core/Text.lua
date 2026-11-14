@@ -139,11 +139,12 @@ function addon.BuildText(key)
     if race == "SkyborneHighOrder" or race == "SkyborneWindshaper" then
         baseRace = "Skyborne"
     end
-    local pool = addon.GetLocalePoolExact(lang, "racial", race, key)
-        or (baseRace and addon.GetLocalePoolExact(lang, "racial", baseRace, key))
+    local useRacial = math.random(100) <= (addon.db and addon.db.racialTextChance or 40)
+    local pool = (useRacial and addon.GetLocalePoolExact(lang, "racial", race, key))
+        or (useRacial and baseRace and addon.GetLocalePoolExact(lang, "racial", baseRace, key))
         or addon.GetLocalePoolExact(lang, "texts", key)
-        or addon.GetLocalePoolExact("deDE", "racial", race, key)
-        or (baseRace and addon.GetLocalePoolExact("deDE", "racial", baseRace, key))
+        or (useRacial and addon.GetLocalePoolExact("deDE", "racial", race, key))
+        or (useRacial and baseRace and addon.GetLocalePoolExact("deDE", "racial", baseRace, key))
         or addon.GetLocalePoolExact("deDE", "texts", key)
     return ChooseText(pool, targetName)
 end
