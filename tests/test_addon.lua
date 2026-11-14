@@ -32,7 +32,7 @@ local function newClient(options)
     env._G = env
     -- Stable selection: ordinary chat is tested separately from /me.
     env.math = setmetatable({
-        random = function(a, b) return b and a or 1 end,
+        random = options.random or function(a, b) return b and a or 1 end,
     }, { __index = math })
     env.print = function(text) state.notices[#state.notices + 1] = text end
     env.GetTime = function() return state.time end
@@ -109,10 +109,34 @@ check(not client.addon.TryText("MARK"), "pre-login calls are safe")
 client.command("chance 100")
 client.login()
 check(client.env.DruidenRP_CharacterDB.textChance == 30, "defaults")
+check(client.env.DruidenRP_CharacterDB.racialTextChance == 40, "racial text chance defaults to 40")
 check(client.env.DruidenRP_CharacterDB.chatChannel == "SAY", "say is the default channel")
 check(client.env.RPChatMod_Settings.textChance == 99, "other addon settings untouched")
 check(client.env.PaladinRP.untouched, "Paladin namespace untouched")
 check(client.env.DruidenRP == client.addon, "public macro API")
+
+local function racialChanceClient(chance, roll, personalTexts)
+    return newClient({
+        db = { racialTextChance = chance, personalTexts = personalTexts },
+        random = function(a, b)
+            if not b and a == 100 then return roll end
+            return b and a or 1
+        end,
+    })
+end
+local selection = racialChanceClient(0, 1)
+local ordinaryMark = selection.addon.localeData.deDE.texts.MARK.gruppe[1]
+local racialMark = selection.addon.localeData.deDE.racial.NightElf.MARK.gruppe[1]
+check(selection.addon.BuildText("MARK") == ordinaryMark, "0% racial chance selects ordinary text")
+selection = racialChanceClient(100, 100)
+check(selection.addon.BuildText("MARK") == racialMark, "100% racial chance selects racial text")
+selection = racialChanceClient(40, 40)
+check(selection.addon.BuildText("MARK") == racialMark, "40% racial chance includes roll 40")
+selection = racialChanceClient(40, 41)
+check(selection.addon.BuildText("MARK") == ordinaryMark, "40% racial chance excludes roll 41")
+selection = racialChanceClient(100, 100, { MARK = { "Personal priority." } })
+check(selection.addon.BuildText("MARK") == "Personal priority.",
+    "personal text remains ahead of racial text")
 client.command("chance 100")
 client.command("cooldown 20")
 check(client.addon.TryText("mark"), "first text allowed at time zero")
@@ -300,9 +324,11 @@ otherClass.command("chance 100")
 check(not otherClass.addon.TryText("MARK"), "non-druid blocked")
 check(#otherClass.messages == 0, "non-druid never sends")
 local damaged = newClient({
-    db = { textChance = -3, cooldown = "bad", chatChannel = "WHISPER", personalTexts = false },
+    db = { textChance = -3, racialTextChance = -3, cooldown = "bad",
+        chatChannel = "WHISPER", personalTexts = false },
 })
 check(damaged.env.DruidenRP_CharacterDB.textChance == 30, "repair invalid chance")
+check(damaged.env.DruidenRP_CharacterDB.racialTextChance == 40, "repair invalid racial chance")
 check(damaged.env.DruidenRP_CharacterDB.cooldown == 20, "repair invalid cooldown")
 check(damaged.env.DruidenRP_CharacterDB.chatChannel == "SAY", "repair invalid channel")
 local migrated = newClient({ db = { chatChannel = "AUTO" } })
@@ -313,9 +339,16 @@ local saved = newClient({ db = { textChance = 71, cooldown = 12, chatChannel = "
 check(saved.env.DruidenRP_CharacterDB.textChance == 71, "saved chance preserved")
 check(saved.env.DruidenRP_CharacterDB.cooldown == 12, "saved cooldown preserved")
 check(saved.env.DruidenRP_CharacterDB.personalTexts.MARK[1] == "Gespeichert.", "saved text preserved")
+for _, chance in ipairs({ 0, 100 }) do
+    local savedRacialChance = newClient({ db = { racialTextChance = chance } })
+    check(savedRacialChance.env.DruidenRP_CharacterDB.racialTextChance == chance,
+        "saved racial chance " .. chance .. " preserved")
+end
 
-local fractional = newClient({ db = { textChance = 2.5, cooldown = 1.5 } })
+local fractional = newClient({ db = { textChance = 2.5, racialTextChance = 2.5, cooldown = 1.5 } })
 check(fractional.env.DruidenRP_CharacterDB.textChance == 30, "fractional saved chance repaired")
+check(fractional.env.DruidenRP_CharacterDB.racialTextChance == 40,
+    "fractional saved racial chance repaired")
 check(fractional.env.DruidenRP_CharacterDB.cooldown == 20, "fractional saved cooldown repaired")
 local invalidDB = newClient({ db = "invalid" })
 check(type(invalidDB.env.DruidenRP_CharacterDB) == "table", "invalid database repaired")
