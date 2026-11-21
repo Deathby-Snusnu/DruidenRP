@@ -11,12 +11,14 @@ for key, translations in pairs(entries) do
     for _, language in ipairs({"deDE","enUS","frFR"}) do
         local locale = addon.localeData and addon.localeData[language]
         local source = locale and locale.texts and locale.texts[key]
-        local pool = source and source.gruppe
-        if type(pool) == "table" then
-            for _, line in ipairs(translations[language]) do
-                local exists = false
-                for _, old in ipairs(pool) do if old == line then exists = true; break end end
-                if not exists then pool[#pool+1] = line end
+        for _, poolName in ipairs({"gruppe", "ziel"}) do
+            local pool = source and source[poolName]
+            if type(pool) == "table" then
+                for _, line in ipairs(translations[language]) do
+                    local exists = false
+                    for _, old in ipairs(pool) do if old == line then exists = true; break end end
+                    if not exists then pool[#pool+1] = line end
+                end
             end
         end
     end
