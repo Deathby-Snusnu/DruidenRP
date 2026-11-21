@@ -28,6 +28,7 @@ locales\frFR\AmbientRacial.lua
 locales\frFR\Expansion.lua
 locales\Finalize.lua
 core\Database.lua
+music\CreativeVoices.lua
 music\MusicRP.lua
 core\Text.lua
 core\Chat.lua
