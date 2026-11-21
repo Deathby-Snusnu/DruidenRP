@@ -160,6 +160,25 @@ end
 
 SLASH_DRUIDENRP1 = "/drp"
 SLASH_DRUIDENRP2 = "/druidenrp"
+local function HandleMusic(argument)
+    local action, value = (argument or ""):match("^%s*(%S*)%s*(.-)%s*$")
+    action = (action or ""):lower()
+    if action == "on" or action == "off" then
+        addon.db.musicEnabled = action == "on"
+    elseif action == "chance" then
+        local number = tonumber(value)
+        if not number or number ~= math.floor(number) or number < 0 or number > 100 then
+            addon.Notify("Benutzung: /drp music chance 0-100")
+            return
+        end
+        addon.db.musicChance = number
+    elseif action ~= "" and action ~= "status" then
+        addon.Notify("Benutzung: /drp music on|off|status|chance 0-100")
+        return
+    end
+    addon.Notify("MusicRP: " .. (addon.db.musicEnabled and "an" or "aus") .. " | Chance " .. tostring(addon.db.musicChance) .. "%")
+end
+
 SlashCmdList.DRUIDENRP = function(message)
     if not addon.ready then
         addon.Notify("Noch nicht geladen. Bitte wartet auf PLAYER_LOGIN.")
@@ -173,6 +192,7 @@ SlashCmdList.DRUIDENRP = function(message)
         addon.Notify("/drp chance 0-100 | /drp cooldown 0-3600")
         addon.Notify("/drp channel [SAY | YELL | EMOTE | PARTY | RAID | INSTANCE_CHAT | AUTO]")
         addon.Notify("/drp language deDE|enUS|frFR")
+        addon.Notify("/drp music on|off|status|chance 0-100")
         addon.Notify("Keine automatischen Zaubertexte: Befehle in Eure Zaubermakros aufnehmen.")
     elseif command == "list" then
         ShowDynamicList(argument:lower(), "drp")
@@ -191,6 +211,7 @@ SlashCmdList.DRUIDENRP = function(message)
         addon.Notify(command .. ": " .. value)
     elseif command == "language" or command == "lang" then
         HandleLanguage(argument)
+    elseif command == "music" then HandleMusic(argument)
     elseif command == "ambient" then
         HandleAmbient(argument)
     elseif command == "channel" then
