@@ -132,6 +132,8 @@ function addon.BuildText(key)
         if text then return text end
     end
 
+    local music = addon.ChooseMusicText and addon.ChooseMusicText(key)
+    if music then return music end
     local targetName = ResolveTargetName(key)
     local race = addon.GetPlayerRaceToken()
     local lang = addon.GetOutputLanguage()

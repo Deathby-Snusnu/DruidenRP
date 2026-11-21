@@ -2,7 +2,7 @@
 ## Title: Druiden RP
 ## Notes: Rollenspieltexte fuer Druiden, abgeleitet von PaladinRP
 ## Author: Hannes; DruidenRP adaptation
-## Version: 0.4.0
+## Version: 0.4.1
 ## SavedVariablesPerCharacter: DruidenRP_CharacterDB
 ## OptionalDeps: RPChatMod
 
@@ -28,6 +28,8 @@ locales\frFR\AmbientRacial.lua
 locales\frFR\Expansion.lua
 locales\Finalize.lua
 core\Database.lua
+music\CreativeVoices.lua
+music\MusicRP.lua
 core\Text.lua
 core\Chat.lua
 core\Cooldown.lua

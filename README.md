@@ -1,3 +1,16 @@
+## MusicRP 0.4.1 und kreative Textüberarbeitung
+
+Sechs optional abrufbare Songmotive und vier zusätzliche allgemeine Fähigkeiten-Pools mit selbst verfassten `/say`- und `/me`-Varianten in **deDE**, **enUS**, **frFR**. Songtitel sind nur interne Inspirations-Metadaten, keine reproduzierten Lyrics. Persönliche Texte, vorhandene Rassen- und Standardpools werden nicht überschrieben.
+
+```text
+/drp music on
+/drp music chance 15
+/drp music status
+/drp music off
+```
+
+MusicRP ist standardmäßig deaktiviert. Die bestehenden Cooldown- und Chatregeln bleiben wirksam. Die TOC enthält die neue Versionsnummer **0.4.1** sowie die Runtime-Dateien `music/CreativeVoices.lua` und `music/MusicRP.lua`. RPTextStudio erkennt neuere Versionen im Development-Kanal nach Merge auf `main`; für Stable muss ein GitHub-Release `v0.4.1` mit passender TOC veröffentlicht werden. Vor Updates lokale Textanpassungen sichern und die Vorschau prüfen.
+
 # Druiden RP
 
 Eigenständiges WoW-RP-Chat-Add-on, abgeleitet vom Aufbau und Verhalten von
