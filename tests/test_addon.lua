@@ -575,4 +575,32 @@ local saved = newClient({db={personalTexts={STARFIRE={"Mein eigener Stern."}}}})
 check(saved.addon.BuildText("STARFIRE") == "Mein eigener Stern.",
     "personal druid texts remain untouched")
 
+
+-- Druid MusicRP is disabled by default and preserves saved custom texts.
+local musicDruid = newClient({race="NightElf"})
+local ma=musicDruid.addon
+check(not ma.db.musicEnabled and ma.db.musicChance == 15, "MusicRP starts disabled")
+local motifs=0
+for key, ref in pairs(ma.musicRPReferences) do
+    motifs=motifs+1
+    check(type(ref.artist)=="string" and type(ref.song)=="string", "music metadata")
+    for _, lang in ipairs({"deDE","enUS","frFR"}) do
+        local lines=ma.musicRP[lang][key]
+        check(type(lines)=="table" and #lines==2 and #lines[1]<=255 and #lines[2]<=255,
+            "multilingual music lines")
+        check(lines[2]:sub(1,1)=="*" and lines[2]:sub(-1)=="*", "music /me marker")
+    end
+end
+check(motifs==6, "six druid music motifs")
+musicDruid.command("music on")
+musicDruid.command("music chance 100")
+check(ma.db.musicEnabled and ma.db.musicChance==100, "music commands activate feature")
+local selected=ma.ChooseMusicText("REJUVENATION")
+check(selected==ma.musicRP.deDE.REJUVENATION[1] or
+    selected==ma.musicRP.deDE.REJUVENATION[2], "selects genuine MusicRP line")
+musicDruid.command("music chance 101")
+check(ma.db.musicChance==100, "bad music chance rejected")
+musicDruid.command("music off")
+check(ma.ChooseMusicText("REJUVENATION")==nil, "music off suppresses text")
+
 print("PASS: " .. checks .. " checks")
