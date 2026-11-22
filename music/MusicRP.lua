@@ -28,6 +28,20 @@ addon.musicRP.deDE.BEAR = { "Es braucht keinen Stahl, wenn die Erde selbst Euch 
 addon.musicRP.enUS.BEAR = { "Steel is needless when the earth itself bears your weight.", "*lowers the head and plants claws firmly in the earth.*" }
 addon.musicRP.frFR.BEAR = { "Point besoin d'acier quand la terre porte votre poids.", "*baisse la tête et enfonce ses griffes dans la terre.*" }
 
+-- Extra original spoken lines and actions for existing music-inspired keys.
+table.insert(addon.musicRP.deDE.REJUVENATION, "Auch nach dem längsten Winter erinnert sich die Erde an den Frühling.")
+table.insert(addon.musicRP.deDE.REJUVENATION, "*lässt eine neue Knospe zwischen welken Blättern wachsen.*")
+table.insert(addon.musicRP.enUS.REJUVENATION, "After the longest winter, the earth remembers spring.")
+table.insert(addon.musicRP.enUS.REJUVENATION, "*coaxes a fresh bud among the withered leaves.*")
+table.insert(addon.musicRP.frFR.REJUVENATION, "Après le plus long hiver, la terre se souvient du printemps.")
+table.insert(addon.musicRP.frFR.REJUVENATION, "*fait naître un bourgeon parmi les feuilles fanées.*")
+table.insert(addon.musicRP.deDE.MOONFIRE, "Die Nacht schweigt nicht. Sie spricht in silbernen Zeichen.")
+table.insert(addon.musicRP.deDE.MOONFIRE, "*zieht einen leuchtenden Halbkreis über den Waldboden.*")
+table.insert(addon.musicRP.enUS.MOONFIRE, "Night is not silent. It speaks in silver signs.")
+table.insert(addon.musicRP.enUS.MOONFIRE, "*draws a glowing crescent across the forest floor.*")
+table.insert(addon.musicRP.frFR.MOONFIRE, "La nuit n'est pas muette. Elle parle en signes d'argent.")
+table.insert(addon.musicRP.frFR.MOONFIRE, "*trace un croissant lumineux sur le sol de la forêt.*")
+
 function addon.ChooseMusicText(key)
     local db = addon.db
     if not db or not db.musicEnabled or (db.musicChance or 0) <= 0 then return nil end
