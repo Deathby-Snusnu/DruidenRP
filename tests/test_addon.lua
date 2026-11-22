@@ -586,9 +586,12 @@ for key, ref in pairs(ma.musicRPReferences) do
     check(type(ref.artist)=="string" and type(ref.song)=="string", "music metadata")
     for _, lang in ipairs({"deDE","enUS","frFR"}) do
         local lines=ma.musicRP[lang][key]
-        check(type(lines)=="table" and #lines==2 and #lines[1]<=255 and #lines[2]<=255,
+        check(type(lines)=="table" and #lines>=2 and #lines%2==0,
             "multilingual music lines")
-        check(lines[2]:sub(1,1)=="*" and lines[2]:sub(-1)=="*", "music /me marker")
+        for i, line in ipairs(lines) do
+            check(#line<=255, "music chat length")
+            if i%2==0 then check(line:sub(1,1)=="*" and line:sub(-1)=="*", "music /me marker") end
+        end
     end
 end
 check(motifs==6, "six druid music motifs")
@@ -596,8 +599,11 @@ musicDruid.command("music on")
 musicDruid.command("music chance 100")
 check(ma.db.musicEnabled and ma.db.musicChance==100, "music commands activate feature")
 local selected=ma.ChooseMusicText("REJUVENATION")
-check(selected==ma.musicRP.deDE.REJUVENATION[1] or
-    selected==ma.musicRP.deDE.REJUVENATION[2], "selects genuine MusicRP line")
+local selectedIsKnown=false
+for _, line in ipairs(ma.musicRP.deDE.REJUVENATION) do
+    if selected==line then selectedIsKnown=true end
+end
+check(selectedIsKnown, "selects genuine MusicRP line")
 musicDruid.command("music chance 101")
 check(ma.db.musicChance==100, "bad music chance rejected")
 musicDruid.command("music off")
